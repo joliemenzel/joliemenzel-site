@@ -4,6 +4,7 @@
   <meta charset="utf-8"/>
   <title>{{ title or site.title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
   {% if site.description %}<meta name="description" content="{{ site.description }}"/>{% endif %}
   {% if site.favicon %}<link rel="icon" href="{{ site.favicon }}">{% endif %}
 
@@ -11,7 +12,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&display=swap" rel="stylesheet">
 
+  <!-- Site CSS (works for / and for subpaths) -->
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | url }}">
+
+  <!-- Inline theme values from site.json (override CSS defaults) -->
+  <style>
+  :root{
+    --accent: {{ site.colors.accent }};
+    --text: {{ site.colors.text }};
+    --link: {{ site.colors.link }};
+    --bg: {{ site.colors.bg }};
+    --thumbBg: {{ site.colors.thumbBg }};
+    --hoverLink: {{ site.colors.hoverLink }};
+    --borders: {{ site.colors.borders }};
+    --smallBorders: {{ site.colors.smallBorders }};
+    --font: 'Inconsolata', monospace;
+  }
+  </style>
 </head>
 <body>
   <header class="navbar">

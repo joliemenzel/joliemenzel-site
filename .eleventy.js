@@ -1,5 +1,6 @@
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
+  
 
   // Collections
   eleventyConfig.addCollection("posts", (api) =>
@@ -33,9 +34,11 @@ module.exports = function(eleventyConfig) {
     return [...tags].sort((a,b) => a.localeCompare(b));
   });
 
+
+
   return {
     dir: { input: "src", includes: "_includes", data: "_data", output: "_site" },
-    pathPrefix: process.env.PATH_PREFIX || "/",
+    pathPrefix: process.env.PATH_PREFIX || "/",  // keep this
     templateFormats: ["njk","md","html"],
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk"
