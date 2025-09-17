@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
@@ -12,72 +12,53 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&display=swap" rel="stylesheet">
 
-  <!-- Site CSS (works for / and for subpaths) -->
+  <!-- Site CSS -->
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | url }}">
 
-  <!-- Inline theme values from site.json (override CSS defaults) -->
+  <!-- Theme values from site.json -->
   <style>
-  :root{
-    --accent: {{ site.colors.accent }};
-    --text: {{ site.colors.text }};
-    --link: {{ site.colors.link }};
-    --bg: {{ site.colors.bg }};
-    --thumbBg: {{ site.colors.thumbBg }};
-    --hoverLink: {{ site.colors.hoverLink }};
-    --borders: {{ site.colors.borders }};
-    --smallBorders: {{ site.colors.smallBorders }};
-    --font: 'Inconsolata', monospace;
-  }
+    :root{
+      --accent: {{ site.colors.accent }};
+      --text: {{ site.colors.text }};
+      --link: {{ site.colors.link }};
+      --bg: {{ site.colors.bg }};
+      --thumbBg: {{ site.colors.thumbBg }};
+      --hoverLink: {{ site.colors.hoverLink }};
+      --borders: {{ site.colors.borders }};
+      --smallBorders: {{ site.colors.smallBorders }};
+      --font: 'Inconsolata', monospace;
+    }
   </style>
 </head>
+
 <body>
+  <!-- Full-bleed sticky ribbon -->
   <header class="navbar">
-    <a class="brand" href="/">JM</a>
-    <nav class="navlinks">
-      {% for item in site.nav %}
-        <a href="{{ item.href }}">{{ item.label }}</a>
-      {% endfor %}
-    </nav>
+    <div class="inner">
+      <a class="brand" href="{{ '/' | url }}">
+        {% if site.header.image %}
+          <img class="brand-image" src="{{ site.header.image }}" alt="{{ site.title }}">
+        {% else %}
+          {{ site.title }}
+        {% endif %}
+      </a>
+      <nav class="navlinks">
+        {% for item in site.nav %}
+          <a href="{{ item.href | url }}">{{ item.label }}</a>
+        {% endfor %}
+      </nav>
+    </div>
   </header>
-  <div id="container">
-    <div id="left">
-      {% if site.header.text %}<p id="Header Text">{{ site.header.text }}</p>{% endif %}
-      {% if site.header.image %}
-        <a href="/"><img src="{{ site.header.image }}" id="header-image" alt=""/></a>
-      {% else %}
-        <h1><a href="/">{{ site.title }}</a></h1>
-      {% endif %}
 
-      {% if site.description %}<p id="description">{{ site.description }}</p>{% endif %}
-      <ul id="pages">
-        <li><a href="/">Home</a></li>
-        <li><a href="/tagged/games/">Work</a></li>
-        <li><a href="/tagged/professional/">Professional</a></li>
-        <li><a href="/tagged/personal/">Personal</a></li>
-      </ul>
+  <!-- Centered page content -->
+  <main id="container">
+    {{ content | safe }}
+  </main>
+
+  <footer class="footer">
+    <div class="inner">
+      <a href="{{ '/' | url }}">Home</a>
     </div>
-
-    <div id="right">
-      <div id="posts">
-        {{ content | safe }}
-      </div>
-    </div>
-
-    <div class="clear"></div>
-    <p id="footer"><a href="/">Home</a></p>
-  </div>
+  </footer>
 </body>
-<style>
-:root{
-  --accent: {{ site.colors.accent }};
-  --text: {{ site.colors.text }};
-  --link: {{ site.colors.link }};
-  --bg: {{ site.colors.bg }};
-  --thumbBg: {{ site.colors.thumbBg }};
-  --hoverLink: {{ site.colors.hoverLink }};
-  --borders: {{ site.colors.borders }};
-  --smallBorders: {{ site.colors.smallBorders }};
-  --font: 'Inconsolata', monospace;
-}
-</style>
 </html>
