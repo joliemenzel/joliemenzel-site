@@ -1,11 +1,14 @@
 ---
 layout: layout.njk
-showIndexBar: true
-eleventyExcludeFromCollections: true
+title: Home
 ---
-<script>
-  window.location.replace("/tagged/{{ site.defaultTag }}/");
-</script>
-<noscript>
-  <p><a href="/tagged/{{ site.defaultTag }}/">Continue to {{ site.defaultTag }}</a></p>
-</noscript>
+<h1 style="margin:0 0 10px 0;">Work</h1>
+<div class="grid">
+  {% for post in collections.posts %}
+    <div class="box">
+      <a href="{{ post.url }}" class="box-caption">#</a>
+      {% if post.data.hero %}<img src="{{ post.data.hero }}" alt="">{% endif %}
+      {% if post.data.title %}<div class="box-caption-text">{{ post.data.title }}</div>{% endif %}
+    </div>
+  {% endfor %}
+</div>

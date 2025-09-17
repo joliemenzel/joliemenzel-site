@@ -5,11 +5,13 @@
   <title>{{ title or site.title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   {% if site.description %}<meta name="description" content="{{ site.description }}"/>{% endif %}
-  <link rel="icon" href="{{ site.favicon }}">
+  {% if site.favicon %}<link rel="icon" href="{{ site.favicon }}">{% endif %}
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/site.css">
+
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | url }}">
 </head>
 <body>
   <div id="container">
@@ -22,26 +24,22 @@
       {% endif %}
 
       {% if site.description %}<p id="description">{{ site.description }}</p>{% endif %}
-
       <ul id="pages">
-        {# Optional static pages could be added here later #}
-        {% if site.resumeLink %}<li><a href="{{ site.resumeLink }}">Resume</a></li>{% endif %}
-        {% if site.blogLink %}<li><a href="{{ site.blogLink }}">Blog</a></li>{% endif %}
-        {% if site.email %}<li><a href="mailto:{{ site.email }}">Contact</a></li>{% endif %}
+        <li><a href="/">Home</a></li>
+        <li><a href="/tagged/games/">Work</a></li>
+        <li><a href="/tagged/professional/">Professional</a></li>
+        <li><a href="/tagged/personal/">Personal</a></li>
       </ul>
     </div>
 
     <div id="right">
-      {% if showIndexBar %}<div id="index-bar"></div><div class="clear"></div>{% endif %}
       <div id="posts">
         {{ content | safe }}
       </div>
     </div>
 
     <div class="clear"></div>
-    <p id="footer">
-      <a href="/">Home</a> &bull; cloned from “hasaportfolio” by matt mcinerney
-    </p>
+    <p id="footer"><a href="/">Home</a></p>
   </div>
 </body>
 </html>

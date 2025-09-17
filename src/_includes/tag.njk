@@ -1,0 +1,23 @@
+---
+layout: layout.njk
+showIndexBar: true
+pagination:
+  data: collections.posts
+  size: 30
+  alias: paged
+eleventyComputed:
+  title: "Tag: {{ tag }}"
+permalink: "tagged/{{ tag | slug }}/index.html"
+---
+<div class="grid">
+  {% for post in collections.posts | filterByTag(tag) %}
+    <div class="box">
+      <a href="{{ post.url }}" class="box-caption">#</a>
+      {% if post.data.hero_image %}
+        <img src="{{ post.data.hero_image }}" alt="">
+      {% endif %}
+      {% if post.data.title %}<div class="box-caption-text">{{ post.data.title }}</div>{% endif %}
+      {% if post.data.caption %}<div class="box-caption-text">{{ post.data.caption | safe }}</div>{% endif %}
+    </div>
+  {% endfor %}
+</div>

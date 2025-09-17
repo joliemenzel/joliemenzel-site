@@ -1,0 +1,33 @@
+---
+layout: layout.njk
+---
+<div class="post">
+  {% if hero_image %}
+  <div class="middle">
+    <div class="middle-content">
+      <a href="{{ hero_image }}" rel="slideshow"><img src="{{ hero_image }}" alt=""></a>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="caption">
+    {% if title %}<h1>{{ title }}</h1>{% endif %}
+    {% if caption %}{{ caption | safe }}{% endif %}
+
+    {% if tags and tags.length %}
+    <div class="tags">Tags:
+      {% for t in tags %}
+        <a href="/tagged/{{ t | slug }}/">{{ t }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="permpaginate">
+      {% set idx = collections.posts | indexOfPage(page) %}
+      {% set prev = collections.posts[idx + 1] %}
+      {% set next = collections.posts[idx - 1] %}
+      {% if prev %}<a href="{{ prev.url }}">Previous Project</a>{% endif %}
+      {% if next %}<a href="{{ next.url }}">Next Project</a>{% endif %}
+    </div>
+  </div>
+</div>

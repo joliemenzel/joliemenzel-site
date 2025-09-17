@@ -2,7 +2,7 @@
   "name": "joliemenzel-site",
   "private": true,
   "scripts": {
-    "dev": "eleventy --serve",
+    "dev": "eleventy --serve --watch --port=8080",
     "build": "eleventy"
   },
   "devDependencies": {
