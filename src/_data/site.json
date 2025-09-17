@@ -1,0 +1,25 @@
+{
+  "title": "Jolie Menzel",
+  "description": "Designer • Narrative • Systems",
+  "favicon": "/assets/img/favicon.ico",
+  "defaultTag": "Default Tag",
+  "resumeLink": "",
+  "blogLink": "",
+  "email": "joliemenzel@gmail.com",
+
+  "colors": {
+    "accent": "#e20033",
+    "text": "#000000",
+    "link": "#333333",
+    "bg": "#ffffff",
+    "thumbBg": "#000000",
+    "hoverLink": "#ffffff",
+    "borders": "#000000",
+    "smallBorders": "#cccccc"
+  },
+
+  "header": {
+    "image": "/assets/img/headers/logo.png",
+    "text": "Header Text"
+  }
+}

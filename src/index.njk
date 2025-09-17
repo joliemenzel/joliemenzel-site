@@ -1,0 +1,11 @@
+---
+layout: layout.njk
+showIndexBar: true
+eleventyExcludeFromCollections: true
+---
+<script>
+  window.location.replace("/tagged/{{ site.defaultTag }}/");
+</script>
+<noscript>
+  <p><a href="/tagged/{{ site.defaultTag }}/">Continue to {{ site.defaultTag }}</a></p>
+</noscript>
