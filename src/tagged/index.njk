@@ -6,6 +6,6 @@ showIndexBar: true
 <h1>Browse by Tag</h1>
 <ul>
   {% for t in collections.tagList %}
-    <li><a href="/tagged/{{ t | url }}">{{ t }}</a></li>
+    <li><a href="/tagged/{{ t | slug }}/">{{ t }}</a></li>
   {% endfor %}
 </ul>

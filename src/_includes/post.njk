@@ -11,6 +11,11 @@ layout: layout.njk
   {% endif %}
 
   <div class="caption">
+    {% if tags and tags.length %}
+      {% set primary = tags[0] %}
+      <p class="breadcrumb"><a href="/tagged/{{ primary | slug }}/">← All {{ primary }}</a></p>
+    {% endif %}
+
     {% if title %}<h1>{{ title }}</h1>{% endif %}
     {% if caption %}{{ caption | safe }}{% endif %}
 

@@ -2,10 +2,17 @@
   "title": "Jolie Menzel",
   "description": "Designer • Narrative • Systems",
   "favicon": "/assets/img/favicon.ico",
-  "defaultTag": "games",
-  "resumeLink": "",
-  "blogLink": "",
   "email": "joliemenzel@gmail.com",
+
+  "nav": [
+    {"href": "/", "label": "Home"},
+    {"href": "/tagged/games/", "label": "Games"},
+    {"href": "/tagged/professional/", "label": "Professional"},
+    {"href": "/tagged/personal/", "label": "Personal"},
+    {"href": "/tagged/", "label": "All tags"}
+  ],
+
+  "customTagPages": ["games"],
 
   "colors": {
     "accent": "#e20033",
@@ -20,6 +27,6 @@
 
   "header": {
     "image": "/assets/img/headers/logo.png",
-    "text": "Header Text"
+    "text": ""
   }
 }

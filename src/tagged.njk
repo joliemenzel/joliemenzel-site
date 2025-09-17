@@ -1,13 +1,13 @@
 ---
 layout: layout.njk
-title: "About"
+pagination:
+  data: collections.tagList
+  size: 1
+  alias: tag
 ---
-<h1>Jolie Menzel</h1>
-<p>Designer / Narrative / Systems. (Short bio here.)</p>
-
-<h2 style="margin-top:24px;">Latest</h2>
+{% set items = collections.posts | withTag(tag) | sortByOrder %}
 <div class="grid">
-  {% for post in collections.posts | slice(0,6) %}
+  {% for post in items %}
     <div class="box">
       <a href="{{ post.url }}" class="box-caption">#</a>
       {% if post.data.hero %}<img src="{{ post.data.hero }}" alt="">{% endif %}

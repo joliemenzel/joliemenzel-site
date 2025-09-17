@@ -1,5 +1,25 @@
 ---
-layout: tag.njk
-tag: games
+layout: layout.njk
 permalink: "tagged/games/index.html"
+title: "Games"
 ---
+{% set games = collections.posts | withTag("games") | sortByOrder %}
+
+{% if games.length %}
+  {% set hero = games[0] %}
+  <article class="box" style="margin-bottom:10px;">
+    <a href="{{ hero.url }}" class="box-caption">#</a>
+    {% if hero.data.hero %}<img src="{{ hero.data.hero }}" alt="">{% endif %}
+    <div class="box-caption-text">{{ hero.data.title }}</div>
+  </article>
+{% endif %}
+
+<div class="grid">
+  {% for post in games | slice(1) %}
+    <div class="box">
+      <a href="{{ post.url }}" class="box-caption">#</a>
+      {% if post.data.hero %}<img src="{{ post.data.hero }}" alt="">{% endif %}
+      {% if post.data.title %}<div class="box-caption-text">{{ post.data.title }}</div>{% endif %}
+    </div>
+  {% endfor %}
+</div>
