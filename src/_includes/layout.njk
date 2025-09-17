@@ -34,14 +34,18 @@
 <body>
   <!-- Full-bleed sticky ribbon -->
   <header class="navbar">
-    <div class="inner">
-      <a class="brand" href="{{ '/' | url }}">
-        {% if site.header.image %}
-          <img class="brand-image" src="{{ site.header.image }}" alt="{{ site.title }}">
-        {% else %}
-          {{ site.title }}
-        {% endif %}
+    <!-- Left-pinned logo -->
+    {% if site.header.image %}
+      <a class="brand brand--logo" href="{{ '/' | url }}">
+        <img class="brand-image" src="{{ site.header.image }}" alt="{{ site.title }}">
       </a>
+    {% else %}
+      <a class="brand brand--logo" href="{{ '/' | url }}">JM</a>
+    {% endif %}
+
+    <!-- Centered title + links -->
+    <div class="inner">
+      <div class="brand brand--text">{{ site.title }}</div>
       <nav class="navlinks">
         {% for item in site.nav %}
           <a href="{{ item.href | url }}">{{ item.label }}</a>

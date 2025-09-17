@@ -2,15 +2,19 @@
 body{ margin:0; background:var(--bg); font-family:var(--font); color:var(--text) }
 .navbar{
   position: sticky; top:0; z-index:1000;
-  padding:10px 0;                      /* keep a little vertical padding */
-  border-bottom:1px solid var(--borders);
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,.9);
   backdrop-filter: saturate(1.2) blur(6px);
+  border-bottom: 1px solid var(--borders);
+  padding: 8px 0;
+  display: grid;
+  grid-template-columns: auto 1fr;  /* left logo | centered content */
+  align-items: center;
 }
 .navbar .brand{ font-weight:600; text-decoration:none; color:var(--text) }
 .navbar .navlinks{ display:flex; gap:8px; overflow:auto; -webkit-overflow-scrolling:touch }
 .navbar .navlinks a{ padding:6px 10px; border-radius:999px; text-decoration:none }
 .navbar .navlinks a:hover{ background:var(--accent); color:var(--hoverLink) }
+
 
 /* Responsive grid */
 .grid{
@@ -48,16 +52,16 @@ body{ margin:0; background:var(--bg); font-family:var(--font); color:var(--text)
 .breadcrumb{ margin:0 0 8px; font-size:12px }
 .breadcrumb a{ text-decoration:none; border-bottom:1px dotted currentColor }
 
-/* Ribbon contents: slightly wider than page content */
+/* Centered title + links (slightly wider than page content) */
 .navbar .inner{
-  max-width: 1200px;        /* ribbon width */
+  grid-column: 2;
+  max-width: 1200px;                /* ribbon width */
   margin: 0 auto;
-  padding: 10px 24px;
-  display:flex;
-  align-items:center;
-  justify-content:center;   /* center brand + links */
-  gap: 12px;
-  flex-wrap: wrap;
+  padding: 8px 24px;
+  display: flex;
+  flex-direction: column;           /* title above links */
+  align-items: center;              /* center both rows */
+  gap: 6px;
 }
 
 /* Centered page content, a bit narrower */
@@ -67,5 +71,30 @@ body{ margin:0; background:var(--bg); font-family:var(--font); color:var(--text)
   padding: 0 24px;
 }
 
-/* (optional) brand image sizing if you use a logo */
-.brand-image{ height:32px; width:auto; vertical-align:middle }
+/* Left-pinned logo */
+.brand--logo{
+  justify-self: start;
+  padding-left: 16px;               /* space from viewport edge */
+  text-decoration: none; color: var(--text); font-weight: 600;
+}
+.brand-image{ height: 32px; width: auto; vertical-align: middle }
+
+/* Title styling (your name) */
+.brand--text{ font-weight: 700; }
+
+/* Nav links row */
+.navlinks{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
+.navlinks a{ padding:6px 10px; border-radius:999px; text-decoration:none }
+.navlinks a:hover{ background:var(--accent); color:var(--hoverLink) }
+
+.footer{
+  border-top: 1px solid var(--borders);
+  background: var(--bg);
+}
+.footer .inner{
+  max-width: 1100px;       /* match #container width */
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-start; /* keep "Home" aligned left within the inner width */
+}
