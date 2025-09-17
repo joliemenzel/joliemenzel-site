@@ -10,6 +10,10 @@ module.exports = function(eleventyConfig) {
       .sort((a, b) => b.date - a.date);
   });
 
+  eleventyConfig.addFilter("indexOfPage", function(posts, currentPage) {
+    return posts.findIndex(p => p.url === currentPage.url);
+  });
+
   eleventyConfig.addCollection("tagList", (collectionApi) => {
     const tags = new Set();
     collectionApi.getFilteredByGlob("src/posts/**/*.{md,html}").forEach(item => {
