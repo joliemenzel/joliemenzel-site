@@ -5,11 +5,69 @@ pagination:
   size: 1
   alias: tag
 ---
-{% set items = collections.posts | withTag(tag) | sortByOrder %}
+
+<a class="pill{% if (t | lower) == current %} active{% endif %}" href="/tagged/{{ t | slugify }}/">{{ t }}</a>
+
+
+{# --- Build portfolio facets ------------------------------------------- #}
+{% set allPosts       = collections.posts %}
+{% set portfolioPosts = allPosts | withTag('portfolio') %}
+{% set facets         = portfolioPosts | facetTags(['portfolio']) %}
+
+{# Determine if current page is portfolio or one of its facet tags #}
+{% set current = (tag or '') | lower %}
+{% set showPortfolioFilters = (current == 'portfolio') %}
+{% for f in facets %}
+  {% if (f | lower) == current %}
+    {% set showPortfolioFilters = true %}
+  {% endif %}
+{% endfor %}
+
+{# --- Decide which items to list --------------------------------------- #}
+{% if showPortfolioFilters %}
+  {# On /tagged/portfolio/ show all portfolio posts; on a facet, intersect #}
+  {% if current == 'portfolio' %}
+    {% set items = portfolioPosts | sortByOrder %}
+  {% else %}
+    {% set items = portfolioPosts | withTag(tag) | sortByOrder %}
+  {% endif %}
+{% else %}
+  {# Non-portfolio tag page: default behavior #}
+  {% set items = allPosts | withTag(tag) | sortByOrder %}
+{% endif %}
+
+{# --- Persistent filter bar for portfolio pages ------------------------ #}
+{% if showPortfolioFilters %}
+  <div class="filter">
+    <a class="pill{% if current == 'portfolio' %} active{% endif %}" href="/tagged/portfolio/">All</a>
+    {% for t in facets %}
+      <a class="pill{% if (t | lower) == current %} active{% endif %}" href="/tagged/{{ t | slugify }}/">{{ t }}</a>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{# --- Page title / status line --------------------------------------- #}
+{% if showPortfolioFilters %}
+  {# On portfolio + facets, use a compact sans label #}
+  <div class="tag-header">
+    {% if current == 'portfolio' %}
+      <span class="tag-subtle">Showing all</span>
+    {% else %}
+      <span class="tag-subtle">Tag:</span>
+      <span class="tag-name">{{ tag }}</span>
+    {% endif %}
+  </div>
+{% else %}
+  {# Non-portfolio tags keep the regular section title #}
+  <h2 class="section-title">Tag: {{ tag }}</h2>
+{% endif %}
+
+
+{# --- Grid -------------------------------------------------------------- #}
 <div class="grid">
   {% for post in items %}
     <div class="box">
-      <a href="{{ post.url }}" class="box-caption">#</a>
+      <a class="box-caption" href="{{ post.url }}">#</a>
       {% if post.data.hero %}<img src="{{ post.data.hero }}" alt="">{% endif %}
       {% if post.data.title %}<div class="box-caption-text">{{ post.data.title }}</div>{% endif %}
     </div>

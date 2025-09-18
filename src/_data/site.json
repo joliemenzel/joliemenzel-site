@@ -5,14 +5,14 @@
   "email": "joliemenzel@gmail.com",
 
   "nav": [
-    {"href": "/", "label": "Home"},
-    {"href": "/tagged/games/", "label": "Games Portfolio"},
+    {"href": "/", "label": "About"},
+    {"href": "/tagged/portfolio/", "label": "Games Portfolio"},
     {"href": "/tagged/professional/", "label": "Professional"},
-    {"href": "/tagged/personal/", "label": "Personal"},
+    {"href": "/tagged/personal/", "label": "Personal Projects"},
     {"href": "/tagged/", "label": "All tags"}
   ],
 
-  "customTagPages": ["games"],
+  "customTagPages": ["portfolio","personal"],
 
   "colors": {
     "accent": "#a71f21",
@@ -26,7 +26,7 @@
   },
 
   "header": {
-    "image": "/assets/img/headers/logo.png",
+    "image": "/assets/img/headers/bouzu.png",
     "text": ""
   }
 }

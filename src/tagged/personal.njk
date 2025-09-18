@@ -1,0 +1,28 @@
+---
+layout: layout.njk
+permalink: "tagged/personal/index.html"
+title: "Jolie Menzel - Personal Projects"
+showIndexBar: true
+---
+
+
+{% set items = collections.posts | withTag('personal') | sortByOrder %}
+
+<div class="filter">
+  <a class="pill active" href="/tagged/personal/">All</a>
+  {# If you want sub-facets for personal, compute and list them here #}
+</div>
+
+<div class="tag-header">
+  <span class="tag-subtle">Showing all{% if items | length %} {{ items | length }}{% endif %}</span>
+</div>
+
+<div class="grid" data-cols="2"> {# or omit data-cols for auto #}
+  {% for post in items %}
+    <div class="box">
+      <a class="box-caption" href="{{ post.url }}">#</a>
+      {% if post.data.hero %}<img src="{{ post.data.hero }}" alt="">{% endif %}
+      {% if post.data.title %}<div class="box-caption-text">{{ post.data.title }}</div>{% endif %}
+    </div>
+  {% endfor %}
+</div>

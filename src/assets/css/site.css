@@ -1,158 +1,196 @@
-/* Sticky ribbon */
+/* =========================================
+   Global design tokens (safe defaults)
+   These can be overridden by your inline :root
+   in layout.njk (which loads AFTER this file).
+   ========================================= */
+:root{
+  /* Brand palette */
+  --red:  #8A2D25;   /* sharp emphasis */
+  --pink: #E8B5BE;   /* soft emphasis */
+  --black:#1E1E1C;   /* text anchor */
+  --lg:   #EBEBEB;   /* light gray */
+  --mg:   #888C8C;   /* mid gray */
+
+  /* Map to your site.json-driven variables (fallbacks) */
+  --accent: var(--red);
+  --text:   var(--black);
+  --link:   var(--black);
+  --bg:     #FFFFFF;
+  --thumbBg:var(--lg);
+  --hoverLink: #FFFFFF;
+  --borders:   var(--black);
+  --smallBorders: var(--mg);
+
+  /* Fonts */
+  --font-sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-serif:"Playfair Display", Georgia, "Times New Roman", serif;
+  --font: var(--font-sans);
+
+  /* Card sizing knobs (percent-based) */
+  --card-gap: 28px;     /* gutters */
+  --card-ratio: 16/9;   /* try 4/3 if you like it taller */
+  --single-width: 60%;  /* grid max-width when only 1 card */
+  --double-width: 75%;  /* grid max-width when exactly 2 cards */
+  --fixed-col-max: 340px; /* max width per card when columns are fixed */
+}
+
+/* =========================================
+   Base
+   ========================================= */
+*{ box-sizing:border-box }
+html,body{ height:100% }
 body{
-  margin:0; background:var(--bg); color:var(--text);
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
   font-family:var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+img{ max-width:100%; height:auto; display:block }
+a{ color:var(--link); text-decoration:none }
+a:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
 
-.navbar{
-  position: sticky; top:0; z-index:1000;
-  background: rgba(235,235,235,.9);
-  backdrop-filter: saturate(1.2) blur(6px);
-  border-bottom: 2px solid var(--borders);
-  padding: 8px 0;
-  display: grid;
-  grid-template-columns: auto 1fr;  /* left logo | centered content */
-  align-items: center;
-}
-.navbar .brand{ font-weight:600; text-decoration:none; color:var(--text) }
-.navbar .navlinks{ display:flex; gap:8px; overflow:auto; -webkit-overflow-scrolling:touch }
-.navbar .navlinks a{ padding:6px 10px; border-radius:999px; text-decoration:none }
-.navbar .navlinks a:hover{ background:var(--accent); color:var(--hoverLink) }
+/* Headings: Playfair */
+h1,h2,h3{ font-family:var(--font-serif); color:var(--black); margin:0 0 .5em }
+em,i{ font-style:italic }
 
-
-/* Responsive grid */
-.grid{
-  display:grid; gap:10px;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-}
-
-/* Tile/card (replaces fixed 250x167 box) */
-.box{
-  position:relative; aspect-ratio: 3 / 2; /* adjust to taste, e.g. 4/3 or 16/9 */
-  overflow:hidden; background:var(--thumbBg); border-radius:8px;
-}
-.box img{ width:100%; height:100%; object-fit:cover; display:block }
-
-/* Clickable overlay anchor */
-.box-caption{ position:absolute; inset:0; display:block; text-indent:-9999px; z-index:5 }
-
-/* Caption overlay (fade on hover for desktop, always visible base for mobile) */
-.box-caption-text{
-  position:absolute; left:0; right:0; bottom:0; z-index:4;
-  padding:8px 10px; font-size:12px; line-height:1.25;
-  color:var(--hoverLink);
-  background: linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,0));
-  opacity:1;
-}
-@media (hover:hover) and (pointer:fine){
-  .box-caption-text{ opacity:0; transition:opacity .2s ease }
-  .box:hover .box-caption-text{ opacity:1 }
-}
-
-/* Post page image should scale too */
-.middle img{ max-width:100%; height:auto; display:block }
-
-/* Breadcrumb style (for post.njk) */
-.breadcrumb{ margin:0 0 8px; font-size:12px }
-.breadcrumb a{ text-decoration:none; border-bottom:1px dotted currentColor }
-
-/* Centered title + links (slightly wider than page content) */
-.navbar .inner{
-  grid-column: 2;
-  max-width: 1200px;                /* ribbon width */
-  margin: 0 auto;
-  padding: 8px 24px;
-  display: flex;
-  flex-direction: column;           /* title above links */
-  align-items: center;              /* center both rows */
-  gap: 6px;
-}
-
-/* Centered page content, a bit narrower */
+/* Page content container (centered) */
 #container{
-  max-width: 1100px;        /* content width */
-  margin: 24px auto;
-  padding: 0 24px;
+  max-width:1100px;
+  margin:24px auto;
+  padding:0 24px;
+}
+
+/* =========================================
+   Sticky top navigation
+   Markup expected:
+   <header class="navbar">
+     <a class="brand brand--logo">…</a>    ← pinned left
+     <div class="inner">                    ← centered content
+       <div class="brand brand--text">Name</div>
+       <nav class="navlinks">…</nav>
+     </div>
+   </header>
+   ========================================= */
+.navbar{
+  position:sticky; top:0; z-index:1000;
+  display:grid; grid-template-columns:auto 1fr; align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid var(--borders);
+  background: rgba(255,255,255,.9);
+  backdrop-filter: saturate(1.2) blur(6px);
+  transition: background .2s ease, border-color .2s ease;
 }
 
 /* Left-pinned logo */
 .brand--logo{
-  justify-self: start;
-  padding-left: 16px;               /* space from viewport edge */
-  text-decoration: none; color: var(--text); font-weight: 600;
+  justify-self:start;
+  padding-left:16px;
+  text-decoration:none; color:var(--text); font-weight:700;
 }
-.brand-image{ height: 32px; width: auto; vertical-align: middle }
+.brand-image{ height:32px; width:auto; vertical-align:middle }
 
-/* Title styling (your name) */
-.brand--text{ font-weight: 700; }
+/* Centered title + link row (slightly wider than content) */
+.navbar .inner{
+  grid-column:2;
+  max-width:1200px;        /* ribbon width */
+  margin:0 auto;
+  padding:8px 24px;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.brand--text{ font-weight:700; font-family:var(--font-serif) }
 
-.brand{ text-decoration:none; color:var(--text); font-weight:700 }
+/* Nav links: uppercase, spaced, pill hover */
 .navlinks{
   display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
-  text-transform: uppercase; letter-spacing: .12em; 
-  font-family: var(--font-sans); font-weight:600;
+  text-transform:uppercase; letter-spacing:.12em; font-weight:600;
+  font-family:var(--font-sans);
 }
-.navlinks a{ color: var(--black); }
-.navlinks a:hover{
-  text-decoration: underline;
-  text-decoration-color: var(--red);
+.navbar .navlinks a{
+  color:var(--black);
+  border-radius:999px;
+  padding:6px 12px;
 }
-
-/* start transparent when body.has-hero and not scrolled */
-body.has-hero .navbar{
-  background: transparent;
-  border-bottom-color: transparent;
-}
-body.scrolled .navbar{
-  background: var(--lg);
-  border-bottom-color: var(--borders);
+.navbar .navlinks a:hover,
+.navbar .navlinks a:focus{
+  background:var(--red);
+  color:#fff;
+  text-decoration:none;
 }
 
-/* Nav links row */
-.navlinks{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
-.navlinks a{ padding:6px 10px; border-radius:999px; text-decoration:none }
-.navlinks a:hover{ background:var(--accent); color:var(--hoverLink) }
-
-/* Headings in Playfair */
-h1,h2,h3{
-  font-family: var(--font-serif);
-  color: var(--black);
-}
-em, i{ font-style: italic; }
-
-/* Links */
-a{ color: var(--link); text-decoration: none; }
-a:hover{
-  text-decoration: underline;
-  text-decoration-color: var(--red);
-  text-underline-offset: 2px;
-}
-
+/* =========================================
+   Percent-based grid sizing (replaces old .grid/.box rules)
+   - ~3 columns at wide sizes (32% min track)
+   - narrows the grid when only 1–2 cards so they don't look gigantic
+   ========================================= */
+/* Default: percent-based grid (~3 cols) */
 .grid{
-  display:grid; gap: 28px;                      /* wider gutters */
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* 2–3 cols */
+  display: grid;
+  gap: var(--card-gap);
+  grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
+  justify-content: center;
 }
 
-/* thumbnails */
+/* Only apply “shrink when 1–2 items” on auto grids (no fixed column count) */
+.grid:not([data-cols]):not(:has(> .box:nth-child(2))){
+  max-width: var(--single-width);
+  margin-inline: auto;
+}
+.grid:not([data-cols]):has(> .box:nth-child(2)):not(:has(> .box:nth-child(3))){
+  max-width: var(--double-width);
+  margin-inline: auto;
+}
+
+/* ----- Per-page control: fixed columns -----
+   Set data-cols="N" on .grid to force N columns.
+   We cap the overall grid width so cards don’t grow too big on huge screens. */
+.grid[data-cols]{
+  justify-content: center;
+  margin-inline: auto;
+}
+.grid[data-cols="1"]{
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  max-width: calc(1 * var(--fixed-col-max) + 0 * var(--card-gap));
+}
+.grid[data-cols="2"]{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: calc(2 * var(--fixed-col-max) + 1 * var(--card-gap));
+}
+.grid[data-cols="3"]{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: calc(3 * var(--fixed-col-max) + 2 * var(--card-gap));
+}
+.grid[data-cols="4"]{
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: calc(4 * var(--fixed-col-max) + 3 * var(--card-gap));
+}
+
+/* Card / thumbnail */
 .box{
-  position:relative; aspect-ratio: 4/3;
-  overflow:hidden; background:var(--thumbBg); border-radius:8px;
+  position:relative;
+  aspect-ratio: var(--card-ratio);
+  overflow:hidden;
+  background:var(--thumbBg);
+  border-radius:8px;
 }
 .box img{
-  width:100%; height:100%; object-fit:cover; display:block;
+  width:100%; height:100%; object-fit:cover;
   filter: grayscale(100%); transition: filter .35s ease;
 }
-.box:hover img{ filter:none; }
+.box:hover img{ filter:none }
 
-/* title overlay (centered text) */
+/* Clickable overlay anchor */
+.box-caption{ position:absolute; inset:0; display:block; text-indent:-9999px; z-index:5 }
+
+/* Title overlay */
 .box-caption-text{
   position:absolute; left:0; right:0; bottom:0; z-index:4;
   padding:10px 12px; font-size:14px; line-height:1.25;
-  font-family: var(--font-serif); /* Playfair for titles */
+  font-family:var(--font-serif);
   text-align:center;
-  color:var(--black);             /* title in near-black */
-  background: linear-gradient(to top, rgba(235,235,235,.9), rgba(235,235,235,0));
-  text-decoration: none;
+  color:var(--black);
+  background: linear-gradient(to top, rgba(235,235,235,.92), rgba(235,235,235,0));
 }
 .box:hover .box-caption-text{
   text-decoration: underline;
@@ -160,64 +198,108 @@ a:hover{
   text-underline-offset: 3px;
 }
 
-.btn{
-  display:inline-block; padding:10px 16px; border-radius:999px;
-  font-family: var(--font-sans); font-weight:600;
-  text-decoration:none; transition: all .2s ease;
+/* Compact tag/status line for portfolio facets */
+.tag-header{
+  margin: 6px 0 14px;
+  font-family: var(--font-sans);
+  color: var(--text);
 }
-.btn-outline{
-  background:#fff; color:var(--black);
-  border:2px solid var(--black);
+.tag-header .tag-subtle{
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--mg); 
 }
-.btn-outline:hover{
-  background: var(--red); color:#fff; border-color: var(--red);
-}
-.btn-filled{
-  background: var(--pink); color:#fff; border:2px solid var(--pink);
-}
-.btn-filled:hover{
-  background: var(--red); border-color: var(--red);
+.tag-header .tag-name{
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 6px;
 }
 
-/* Featured case study block */
-.featured{
-  background: var(--mg); color:#fff; padding: 36px 0;
-}
+
+/* =========================================
+   Featured strip (optional)
+   ========================================= */
+.featured{ background:var(--mg); color:#fff; padding:36px 0 }
 .featured .wrap{
   max-width:1100px; margin:0 auto; padding:0 24px;
-  display:grid; gap:24px; grid-template-columns: 1fr 1fr;
+  display:grid; gap:24px; grid-template-columns:1fr 1fr; align-items:center;
 }
-.featured h2{ font-family: var(--font-serif); color:#fff; margin:0 0 8px; }
-.featured .sub{ font-family: var(--font-sans); color: #e0e0e0; }
+.featured .media img{ border-radius:8px }
+.featured h2{ font-family:var(--font-serif); color:#fff; margin:0 0 8px }
+.featured .sub{ font-family:var(--font-sans); color: #E0E0E0; margin:0 0 12px }
 
-/* About section */
-.about{
-  background: var(--lg); padding: 48px 0;
-}
+/* =========================================
+   About section
+   ========================================= */
+.about{ background:var(--lg); padding:48px 0 }
 .about .wrap{
   max-width:1100px; margin:0 auto; padding:0 24px;
-  display:grid; gap:24px; grid-template-columns: 1fr 1.2fr;
+  display:grid; gap:24px; grid-template-columns:1fr 1.2fr;
 }
-.about .photo{
-  border: 2px solid var(--red);
-}
-.about .bio{
-  font-family: var(--font-sans);
-}
-.about .pull{
-  font-family: var(--font-serif); font-style: italic; color: var(--pink);
-}
+@media (max-width:900px){ .about .wrap{ grid-template-columns:1fr } }
+.about .photo{ border:2px solid var(--red); border-radius:6px; overflow:hidden }
+.about .bio{ font-family:var(--font-sans) }
+.about .pull{ font-family:var(--font-serif); color:var(--pink) }
 
+/* =========================================
+   Buttons
+   ========================================= */
+.btn{
+  display:inline-block; padding:10px 16px; border-radius:999px;
+  font-family:var(--font-sans); font-weight:600;
+  transition: all .2s ease; text-decoration:none;
+}
+.btn-outline{ background:#fff; color:var(--black); border:2px solid var(--black) }
+.btn-outline:hover{ background:var(--red); color:#fff; border-color:var(--red) }
+.btn-filled{ background:var(--pink); color:#fff; border:2px solid var(--pink) }
+.btn-filled:hover{ background:var(--red); border-color:var(--red) }
+
+/* =========================================
+   Tag filters (pills)
+   ========================================= */
+.filter{ display:flex; align-items:center; gap:8px; margin:8px 0 16px; font-family:var(--font-sans) }
+.filter .pill{
+  appearance:none; -webkit-appearance:none;
+  border:1px solid var(--black);
+  background:#fff;
+  padding:4px 10px; border-radius:999px;
+  font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+  cursor:pointer;
+}
+.filter .pill:hover{ background:var(--red); color:#fff; border-color:var(--red) }
+.filter .pill[aria-pressed="true"], .filter .pill.active{
+  background:var(--red); color:#fff; border-color:var(--red)
+}
+.filter .pill:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
+
+/* =========================================
+   Content details / misc
+   ========================================= */
+.middle img{ max-width:100%; height:auto; display:block }  /* post images */
+.breadcrumb{ margin:0 0 8px; font-size:12px }
+.breadcrumb a{ text-decoration:none; border-bottom:1px dotted currentColor }
+
+/* =========================================
+   Footer (dark)
+   ========================================= */
 .footer{
-  border-top: 4px solid var(--black);       /* accent line */
-  background: var(--mg); color: var(--lg);
+  border-top:4px solid var(--red);        /* accent line */
+  background:var(--black);
+  color:var(--lg);
 }
 .footer .inner{
   max-width:1100px; margin:0 auto; padding:18px 24px;
-  display:flex; gap:16px; align-items:center;
+  display:flex; gap:16px; align-items:center; justify-content:flex-start;
 }
-.footer a{ color: var(--lg); text-decoration:none; }
+.footer a{ color:var(--lg); text-decoration:none }
 .footer a:hover{
-  text-decoration: underline;
-  text-decoration-color: var(--pink);
+  text-decoration:underline;
+  text-decoration-color:var(--pink);
+  text-underline-offset:2px;
 }
+
+/* =========================================
+   Safety: hide any leftover old layout hooks
+   ========================================= */
+#left, #right{ display:none !important }

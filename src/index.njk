@@ -5,14 +5,20 @@ title: "About"
 <h1>Jolie Menzel</h1>
 <p>Designer / Narrative / Systems. (Short bio here.)</p>
 
-<h2 style="margin-top:24px;">Latest</h2>
 
+{#
+This is an example of curating a section of content with tags.
+<h2 class="section-title">Selected Work</h2>
 <div class="grid">
-  {% for post in collections.posts | slice(0,6) %}
+  {% for post in collections.posts | withTag('featured') | sortByOrder %}
     <div class="box">
-      <a href="{{ post.url }}" class="box-caption">#</a>
+      <a class="box-caption" href="{{ post.url }}">#</a>
       {% if post.data.hero %}<img src="{{ post.data.hero }}" alt="">{% endif %}
       {% if post.data.title %}<div class="box-caption-text">{{ post.data.title }}</div>{% endif %}
     </div>
   {% endfor %}
 </div>
+#}
+
+
+<h2 style="margin-top:24px;">Latest</h2>

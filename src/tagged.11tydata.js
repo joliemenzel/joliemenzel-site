@@ -1,16 +1,18 @@
 // src/tagged.11tydata.js
 module.exports = {
-  // Filter the tag list BEFORE pagination so we only paginate valid, non-custom tags
   pagination: {
+    data: "collections.tagList",
+    size: 1,
+    alias: "tag",
     before: (tags, data) => {
       const custom = new Set(((data.site && data.site.customTagPages) || [])
         .map(t => String(t).toLowerCase()));
       return (tags || []).filter(raw => {
         if (typeof raw !== "string") return false;
         const clean = raw.trim();
-        if (!clean) return false; // drop empty/whitespace
+        if (!clean) return false;
         const lower = clean.toLowerCase();
-        if (custom.has(lower)) return false; // handled by custom file (e.g., games)
+        if (custom.has(lower)) return false; // handled by a custom page (e.g., games)
         const slug = lower.replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-");
         if (!slug || slug === "index") return false; // avoid /tagged/ and /tagged/index
         return true;
@@ -18,8 +20,10 @@ module.exports = {
     }
   },
 
+  // Render all tag pages with one template under _includes
+  layout: "tag.njk",
+
   eleventyComputed: {
-    // Now every paginated item is valid, so ALWAYS return a real permalink
     permalink: (data) => {
       const lower = String(data.tag || "").toLowerCase();
       const slug  = lower.replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-");
