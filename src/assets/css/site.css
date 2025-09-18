@@ -1,10 +1,14 @@
 /* Sticky ribbon */
-body{ margin:0; background:var(--bg); font-family:var(--font); color:var(--text) }
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:var(--font-sans);
+}
+
 .navbar{
   position: sticky; top:0; z-index:1000;
-  background: rgba(255,255,255,.9);
+  background: rgba(235,235,235,.9);
   backdrop-filter: saturate(1.2) blur(6px);
-  border-bottom: 1px solid var(--borders);
+  border-bottom: 2px solid var(--borders);
   padding: 8px 0;
   display: grid;
   grid-template-columns: auto 1fr;  /* left logo | centered content */
@@ -82,19 +86,138 @@ body{ margin:0; background:var(--bg); font-family:var(--font); color:var(--text)
 /* Title styling (your name) */
 .brand--text{ font-weight: 700; }
 
+.brand{ text-decoration:none; color:var(--text); font-weight:700 }
+.navlinks{
+  display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+  text-transform: uppercase; letter-spacing: .12em; 
+  font-family: var(--font-sans); font-weight:600;
+}
+.navlinks a{ color: var(--black); }
+.navlinks a:hover{
+  text-decoration: underline;
+  text-decoration-color: var(--red);
+}
+
+/* start transparent when body.has-hero and not scrolled */
+body.has-hero .navbar{
+  background: transparent;
+  border-bottom-color: transparent;
+}
+body.scrolled .navbar{
+  background: var(--lg);
+  border-bottom-color: var(--borders);
+}
+
 /* Nav links row */
 .navlinks{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
 .navlinks a{ padding:6px 10px; border-radius:999px; text-decoration:none }
 .navlinks a:hover{ background:var(--accent); color:var(--hoverLink) }
 
+/* Headings in Playfair */
+h1,h2,h3{
+  font-family: var(--font-serif);
+  color: var(--black);
+}
+em, i{ font-style: italic; }
+
+/* Links */
+a{ color: var(--link); text-decoration: none; }
+a:hover{
+  text-decoration: underline;
+  text-decoration-color: var(--red);
+  text-underline-offset: 2px;
+}
+
+.grid{
+  display:grid; gap: 28px;                      /* wider gutters */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* 2–3 cols */
+}
+
+/* thumbnails */
+.box{
+  position:relative; aspect-ratio: 4/3;
+  overflow:hidden; background:var(--thumbBg); border-radius:8px;
+}
+.box img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  filter: grayscale(100%); transition: filter .35s ease;
+}
+.box:hover img{ filter:none; }
+
+/* title overlay (centered text) */
+.box-caption-text{
+  position:absolute; left:0; right:0; bottom:0; z-index:4;
+  padding:10px 12px; font-size:14px; line-height:1.25;
+  font-family: var(--font-serif); /* Playfair for titles */
+  text-align:center;
+  color:var(--black);             /* title in near-black */
+  background: linear-gradient(to top, rgba(235,235,235,.9), rgba(235,235,235,0));
+  text-decoration: none;
+}
+.box:hover .box-caption-text{
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
+  text-underline-offset: 3px;
+}
+
+.btn{
+  display:inline-block; padding:10px 16px; border-radius:999px;
+  font-family: var(--font-sans); font-weight:600;
+  text-decoration:none; transition: all .2s ease;
+}
+.btn-outline{
+  background:#fff; color:var(--black);
+  border:2px solid var(--black);
+}
+.btn-outline:hover{
+  background: var(--red); color:#fff; border-color: var(--red);
+}
+.btn-filled{
+  background: var(--pink); color:#fff; border:2px solid var(--pink);
+}
+.btn-filled:hover{
+  background: var(--red); border-color: var(--red);
+}
+
+/* Featured case study block */
+.featured{
+  background: var(--mg); color:#fff; padding: 36px 0;
+}
+.featured .wrap{
+  max-width:1100px; margin:0 auto; padding:0 24px;
+  display:grid; gap:24px; grid-template-columns: 1fr 1fr;
+}
+.featured h2{ font-family: var(--font-serif); color:#fff; margin:0 0 8px; }
+.featured .sub{ font-family: var(--font-sans); color: #e0e0e0; }
+
+/* About section */
+.about{
+  background: var(--lg); padding: 48px 0;
+}
+.about .wrap{
+  max-width:1100px; margin:0 auto; padding:0 24px;
+  display:grid; gap:24px; grid-template-columns: 1fr 1.2fr;
+}
+.about .photo{
+  border: 2px solid var(--red);
+}
+.about .bio{
+  font-family: var(--font-sans);
+}
+.about .pull{
+  font-family: var(--font-serif); font-style: italic; color: var(--pink);
+}
+
 .footer{
-  border-top: 1px solid var(--borders);
-  background: var(--bg);
+  border-top: 4px solid var(--black);       /* accent line */
+  background: var(--mg); color: var(--lg);
 }
 .footer .inner{
-  max-width: 1100px;       /* match #container width */
-  margin: 0 auto;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: flex-start; /* keep "Home" aligned left within the inner width */
+  max-width:1100px; margin:0 auto; padding:18px 24px;
+  display:flex; gap:16px; align-items:center;
+}
+.footer a{ color: var(--lg); text-decoration:none; }
+.footer a:hover{
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
 }

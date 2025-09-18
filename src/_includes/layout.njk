@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 
   <!-- Site CSS -->
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | url }}">
@@ -18,15 +19,27 @@
   <!-- Theme values from site.json -->
   <style>
     :root{
+      /* palette */
+      --red:  #a71f21;
+      --pink: #E8B5BE;
+      --black:#1E1E1C;
+      --lg:   #EBEBEB;
+      --mg:   #888C8C;
+
+      /* map to your existing site.json-driven vars */
       --accent: {{ site.colors.accent }};
-      --text: {{ site.colors.text }};
-      --link: {{ site.colors.link }};
-      --bg: {{ site.colors.bg }};
-      --thumbBg: {{ site.colors.thumbBg }};
+      --text:   {{ site.colors.text }};
+      --link:   {{ site.colors.link }};
+      --bg:     {{ site.colors.bg }};
+      --thumbBg:{{ site.colors.thumbBg }};
       --hoverLink: {{ site.colors.hoverLink }};
-      --borders: {{ site.colors.borders }};
+      --borders:   {{ site.colors.borders }};
       --smallBorders: {{ site.colors.smallBorders }};
-      --font: 'Inconsolata', monospace;
+
+      /* fonts */
+      --font-sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --font-serif:"Playfair Display", Georgia, serif;
+      --font: var(--font-sans); /* body default */
     }
   </style>
 </head>
@@ -64,5 +77,20 @@
       <a href="{{ '/' | url }}">Home</a>
     </div>
   </footer>
+
+  <script>
+    (function(){
+      var last = -1;
+      function onScroll(){
+        var s = window.scrollY || window.pageYOffset || 0;
+        if ((s>10) !== document.body.classList.contains('scrolled')){
+          document.body.classList.toggle('scrolled', s>10);
+        }
+      }
+      window.addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+    })();
+  </script>
+
 </body>
 </html>

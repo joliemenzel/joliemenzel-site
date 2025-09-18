@@ -1,12 +1,12 @@
 {
   "title": "Jolie Menzel",
-  "description": "Designer • Narrative • Systems",
+  "description": "Narrative & Visual Storytelling Leader | Design Director with AAA & Indie Expertise",
   "favicon": "/assets/img/favicon.ico",
   "email": "joliemenzel@gmail.com",
 
   "nav": [
     {"href": "/", "label": "Home"},
-    {"href": "/tagged/games/", "label": "Games"},
+    {"href": "/tagged/games/", "label": "Games Portfolio"},
     {"href": "/tagged/professional/", "label": "Professional"},
     {"href": "/tagged/personal/", "label": "Personal"},
     {"href": "/tagged/", "label": "All tags"}
@@ -15,14 +15,14 @@
   "customTagPages": ["games"],
 
   "colors": {
-    "accent": "#e20033",
-    "text": "#000000",
-    "link": "#333333",
-    "bg": "#ffffff",
-    "thumbBg": "#000000",
-    "hoverLink": "#ffffff",
-    "borders": "#000000",
-    "smallBorders": "#cccccc"
+    "accent": "#a71f21",
+    "text": "#1E1E1C",
+    "link": "#1E1E1C",
+    "bg": "#FFFFFF",
+    "thumbBg": "#EBEBEB",
+    "hoverLink": "#FFFFFF",
+    "borders": "#1E1E1C",
+    "smallBorders": "#888C8C"
   },
 
   "header": {
