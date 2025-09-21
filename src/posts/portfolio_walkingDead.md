@@ -4,7 +4,7 @@ title: "The Walking Dead (2012)"
 slug: wd2012
 date: 2012-09-20
 tags: ["site_portfolio"]
-hero: "/assets/img/posts/walking_dead.jpg"
+hero: "/assets/img/posts/portfolio_walking_dead.jpg"
 ---
 
 The Walking Dead is an episodic adventure game that takes place in the same universe as Robert Kirkman's comic of the same name. Since it's release in 2012, it has received numerous accolades from a variety of publications and organizations, including Game of the Year from the Spike Video Game Awards and a BAFTA for Best Narrative. 
