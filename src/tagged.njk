@@ -6,17 +6,17 @@ pagination:
   alias: tag
 ---
 
-<a class="pill{% if (t | lower) == current %} active{% endif %}" href="/tagged/{{ t | slugify }}/">{{ t }}</a>
-
+{# --- Config: single source of truth for the portfolio tag ------------- #}
+{% set PORTFOLIO_TAG = 'site_portfolio' %}
 
 {# --- Build portfolio facets ------------------------------------------- #}
 {% set allPosts       = collections.posts %}
-{% set portfolioPosts = allPosts | withTag('portfolio') %}
-{% set facets         = portfolioPosts | facetTags(['portfolio']) %}
+{% set portfolioPosts = allPosts | withTag(PORTFOLIO_TAG) %}
+{% set facets         = portfolioPosts | facetTags([PORTFOLIO_TAG]) %}
 
-{# Determine if current page is portfolio or one of its facet tags #}
+{# Determine if current page is the portfolio hub or one of its facets --- #}
 {% set current = (tag or '') | lower %}
-{% set showPortfolioFilters = (current == 'portfolio') %}
+{% set showPortfolioFilters = (current == PORTFOLIO_TAG) %}
 {% for f in facets %}
   {% if (f | lower) == current %}
     {% set showPortfolioFilters = true %}
@@ -25,8 +25,8 @@ pagination:
 
 {# --- Decide which items to list --------------------------------------- #}
 {% if showPortfolioFilters %}
-  {# On /tagged/portfolio/ show all portfolio posts; on a facet, intersect #}
-  {% if current == 'portfolio' %}
+  {# On /tagged/site_portfolio/ show all portfolio posts; on a facet, intersect #}
+  {% if current == PORTFOLIO_TAG %}
     {% set items = portfolioPosts | sortByOrder %}
   {% else %}
     {% set items = portfolioPosts | withTag(tag) | sortByOrder %}
@@ -39,18 +39,17 @@ pagination:
 {# --- Persistent filter bar for portfolio pages ------------------------ #}
 {% if showPortfolioFilters %}
   <div class="filter">
-    <a class="pill{% if current == 'portfolio' %} active{% endif %}" href="/tagged/portfolio/">All</a>
+    <a class="pill{% if current == PORTFOLIO_TAG %} active{% endif %}" href="/tagged/{{ PORTFOLIO_TAG }}/">All</a>
     {% for t in facets %}
       <a class="pill{% if (t | lower) == current %} active{% endif %}" href="/tagged/{{ t | slugify }}/">{{ t }}</a>
     {% endfor %}
   </div>
 {% endif %}
 
-{# --- Page title / status line --------------------------------------- #}
+{# --- Page title / status line ----------------------------------------- #}
 {% if showPortfolioFilters %}
-  {# On portfolio + facets, use a compact sans label #}
   <div class="tag-header">
-    {% if current == 'portfolio' %}
+    {% if current == PORTFOLIO_TAG %}
       <span class="tag-subtle">Showing all</span>
     {% else %}
       <span class="tag-subtle">Tag:</span>
@@ -58,10 +57,8 @@ pagination:
     {% endif %}
   </div>
 {% else %}
-  {# Non-portfolio tags keep the regular section title #}
   <h2 class="section-title">Tag: {{ tag }}</h2>
 {% endif %}
-
 
 {# --- Grid -------------------------------------------------------------- #}
 <div class="grid">

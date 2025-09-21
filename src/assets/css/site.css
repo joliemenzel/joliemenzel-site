@@ -273,12 +273,76 @@ em,i{ font-style:italic }
 }
 .filter .pill:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
 
+
 /* =========================================
    Content details / misc
    ========================================= */
 .middle img{ max-width:100%; height:auto; display:block }  /* post images */
 .breadcrumb{ margin:0 0 8px; font-size:12px }
 .breadcrumb a{ text-decoration:none; border-bottom:1px dotted currentColor }
+
+.post-body img,
+.post-body iframe { display:block; max-width:100%; height:auto; margin:1rem 0; }
+.hero-caption { font-size:.9rem; opacity:.75; margin-top:.5rem; }
+
+/* links */
+
+.post-body a{
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1.5px;
+}
+
+.post-body a:hover,
+.post-body a:focus{
+  text-decoration-thickness: 2px;
+}
+
+.post-body a:visited{
+  color: color-mix(in srgb, var(--accent) 80%, black); /* slightly darker red */
+}
+
+/* Post body media defaults (don’t fight the shortcode’s margins) */
+.post-body img{ display:block; max-width:100%; height:auto; margin:1rem 0; }
+.post-body iframe{ display:block; max-width:100%; height:auto; margin:0; }
+
+.hero-caption { font-size:.9rem; opacity:.75; margin-top:.5rem; }
+
+
+/* =========================================
+   Video embeds 
+   ========================================= */
+.video-embed{
+  position: relative;
+  width: 100%;
+  margin: 1.5rem auto;
+  /* width will cap via inline --max set by the shortcode */
+  max-width: var(--max, 100%);
+}
+
+/* Establish height with padding so the box always sizes itself */
+.video-embed::before{
+  content: "";
+  display: block;
+  /* default 16:9 */
+  padding-top: calc(100% * var(--ratio-h, 9) / var(--ratio-w, 16));
+}
+
+/* Ratio presets (you can add more) */
+.video-embed[data-ratio="16/9"] { --ratio-w:16; --ratio-h:9; }
+.video-embed[data-ratio="4/3"]  { --ratio-w:4;  --ratio-h:3; }
+.video-embed[data-ratio="1/1"]  { --ratio-w:1;  --ratio-h:1; }
+.video-embed[data-ratio="21/9"] { --ratio-w:21; --ratio-h:9; }
+
+.video-embed iframe{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
 
 /* =========================================
    Footer (dark)

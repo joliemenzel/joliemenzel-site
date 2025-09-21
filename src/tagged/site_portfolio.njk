@@ -1,16 +1,16 @@
 ---
 layout: layout.njk
-permalink: "tagged/portfolio/index.html"
+permalink: "tagged/site_portfolio/index.html"
 title: "Jolie Menzel - Games Portfolio"
 ---
 
 {# Collect portfolio items and build facet list #}
-{% set items  = collections.posts | withTag('portfolio') | sortByOrder %}
-{% set facets = items | facetTags(['portfolio']) %}
+{% set items  = collections.posts | withTag('site_portfolio') | sortByOrder %}
+{% set facets = items | facetTags(['site_portfolio']) %}
 
 {# Persistent filter bar (links to /tagged/<facet>/ pages) #}
 <div class="filter">
-  <a class="pill active" href="/tagged/portfolio/">All</a>
+  <a class="pill active" href="/tagged/site_portfolio/">All</a>
   {% for t in facets %}
     <a class="pill" href="/tagged/{{ t | slugify }}/">{{ t }}</a>
   {% endfor %}

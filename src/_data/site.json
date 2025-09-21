@@ -6,13 +6,13 @@
 
   "nav": [
     {"href": "/", "label": "About"},
-    {"href": "/tagged/portfolio/", "label": "Games Portfolio"},
+    {"href": "/tagged/site_portfolio/", "label": "Games Portfolio"},
     {"href": "/tagged/professional/", "label": "Professional"},
     {"href": "/tagged/personal/", "label": "Personal Projects"},
     {"href": "/tagged/", "label": "All tags"}
   ],
 
-  "customTagPages": ["portfolio","personal"],
+  "customTagPages": ["site_portfolio","personal"],
 
   "colors": {
     "accent": "#a71f21",

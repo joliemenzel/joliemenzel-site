@@ -1,38 +1,64 @@
 ---
 layout: layout.njk
 ---
+
+{# -------- Resolve hero (supports hero.src, hero (string), or hero_image) -------- #}
+{% set heroSrc = "" %}
+{% if hero and hero.src %}{% set heroSrc = hero.src %}{% endif %}
+{% if not heroSrc and hero_image %}{% set heroSrc = hero_image %}{% endif %}
+{% if not heroSrc and hero is string %}{% set heroSrc = hero %}{% endif %}
+{% set heroAlt = (hero and hero.alt) or title %}
+{% set heroCaption = (hero and hero.caption) or caption %}
+
 <div class="post">
-  {% if hero_image %}
-  <div class="middle">
-    <div class="middle-content">
-      <a href="{{ hero_image }}" rel="slideshow"><img src="{{ hero_image }}" alt=""></a>
-    </div>
-  </div>
-  {% endif %}
 
   <div class="caption">
+    {# Breadcrumb to primary tag (optional) #}
     {% if tags and tags.length %}
       {% set primary = tags[0] %}
       <p class="breadcrumb"><a href="/tagged/{{ primary | slug }}/">← All {{ primary }}</a></p>
     {% endif %}
 
     {% if title %}<h1>{{ title }}</h1>{% endif %}
-    {% if caption %}{{ caption | safe }}{% endif %}
+  </div>
 
-    {% if tags and tags.length %}
+  {# --- Hero image (optional) --- #}
+  {% if heroSrc %}
+    <div class="middle">
+      <div class="middle-content">
+        <a href="{{ heroSrc }}" rel="slideshow">
+          <img src="{{ heroSrc }}" alt="{{ heroAlt | default(title) }}">
+        </a>
+        {% if heroCaption %}
+          <div class="hero-caption">{{ heroCaption | safe }}</div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+
+
+  {# --- MAIN POST BODY: render Markdown content --- #}
+  <article class="post-body">
+    {{ content | safe }}
+  </article>
+
+  {#
+  {% if tags and tags.length %}
     <div class="tags">Tags:
       {% for t in tags %}
         <a href="/tagged/{{ t | slug }}/">{{ t }}</a>
       {% endfor %}
     </div>
-    {% endif %}
+  {% endif %}
 
-    <div class="permpaginate">
-      {% set idx = collections.posts | indexOfPage(page) %}
-      {% set prev = collections.posts[idx + 1] %}
-      {% set next = collections.posts[idx - 1] %}
-      {% if prev %}<a href="{{ prev.url }}">Previous Project</a>{% endif %}
-      {% if next %}<a href="{{ next.url }}">Next Project</a>{% endif %}
-    </div>
+  
+  <div class="permpaginate">
+    {% set idx = collections.posts | indexOfPage(page) %}
+    {% set prev = collections.posts[idx + 1] %}
+    {% set next = collections.posts[idx - 1] %}
+    {% if prev %}<a href="{{ prev.url }}">Previous Project</a>{% endif %}
+    {% if next %}<a href="{{ next.url }}">Next Project</a>{% endif %}
+  #}
   </div>
 </div>
