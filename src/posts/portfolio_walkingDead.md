@@ -3,7 +3,7 @@ layout: post.njk
 title: "The Walking Dead (2012)"
 slug: wd2012
 date: 2012-09-20
-tags: ["site_portfolio"]
+tags: ["site_portfolio","AA"]
 hero: "/assets/img/posts/portfolio_walking_dead.jpg"
 ---
 

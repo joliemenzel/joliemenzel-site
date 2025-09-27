@@ -367,3 +367,17 @@ em,i{ font-style:italic }
    Safety: hide any leftover old layout hooks
    ========================================= */
 #left, #right{ display:none !important }
+
+/* ===== Vertical / portrait fail-safe: force single-column stacks ===== */
+@media (orientation: portrait), (max-aspect-ratio: 1/1), (max-width: 700px) {
+  /* collapse every grid (even those with data-cols) to one column */
+  .grid,
+  .grid[data-cols]{
+    grid-template-columns: 1fr !important;
+    max-width: none !important;   /* don't clamp the grid width */
+    justify-content: stretch;
+  }
+
+  /* optional: slightly tighter gutters on phones */
+  :root{ --card-gap: 16px; }
+}

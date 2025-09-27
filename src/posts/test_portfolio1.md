@@ -2,7 +2,7 @@
 layout: post.njk
 title: "Test: Portfolio Game 1"
 date: 2025-09-16
-tags: ["site_portfolio","missions"]
+tags: ["missions"]
 hero: "/assets/img/posts/spfbw.jpg"
 order: 2
 permalink: "/post/{{ page.fileSlug }}/"

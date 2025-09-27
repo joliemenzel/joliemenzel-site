@@ -3,7 +3,7 @@ layout: post.njk
 title: "The Wolf Among Us (2013)"
 slug: wolf
 date: 2013-09-20
-tags: ["site_portfolio"]
+tags: ["site_portfolio","AA"]
 hero: "/assets/img/posts/portfolio_wolf_among_us.jpg"
 ---
 

@@ -3,7 +3,7 @@ layout: post.njk
 title: "The Walking Dead: 400 Days (2013)"
 
 date: 2013-07-20
-tags: ["site_portfolio"]
+tags: ["site_portfolio","AA"]
 hero: "/assets/img/posts/portfolio_walking_dead_400.jpg"
 ---
 
