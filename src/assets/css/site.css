@@ -369,7 +369,7 @@ em,i{ font-style:italic }
 #left, #right{ display:none !important }
 
 /* ===== Vertical / portrait fail-safe: force single-column stacks ===== */
-@media (orientation: portrait), (max-aspect-ratio: 1/1), (max-width: 700px) {
+@media (orientation: portrait), (max-aspect-ratio: 1/1), (max-width: 800px) {
   /* collapse every grid (even those with data-cols) to one column */
   .grid,
   .grid[data-cols]{
