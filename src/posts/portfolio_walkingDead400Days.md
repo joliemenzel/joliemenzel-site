@@ -7,6 +7,20 @@ tags: ["site_portfolio","AA"]
 hero: "/assets/img/posts/portfolio_walking_dead_400.jpg"
 ---
 
+
+**Role**
+Cinematic Artist
+
+**Release**
+July 2, 2013
+
+**Responsibilities**
+Cinematic Design
+Level Design
+Gameplay Scripting (LUA)
+
+
+
 *The Walking Dead: 400 Days* is a downloadable DLC special episode for *The Walking Dead: Season One*. It is set at the same time as the events of *The Walking Dead*, and follows 5 separate groups of survivors, each with their own stand-alone stories and unique gameplay. 
 
 *400 Days* was a wonderful way for us to take a look at our successes in advancing the adventure game genre, and push further with more experimental ideas for how players could interact with our stories.  

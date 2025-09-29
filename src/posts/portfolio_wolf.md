@@ -2,13 +2,31 @@
 layout: post.njk
 title: "The Wolf Among Us (2013)"
 slug: wolf
-date: 2013-09-20
-tags: ["site_portfolio","AA"]
+date: 2013-10-20
+tags: ["site_portfolio","AA","cinematics","missions","levels"]
 hero: "/assets/img/posts/portfolio_wolf_among_us.jpg"
 ---
 
-*The Wolf Among Us* is an episodic adventure game based on Robert Kirkman's *Fables* comic book series. The game's story serves as a prequel, set twenty years before the events of *Fables*
-*The Wofl Among Us* won Best Direction in a Game Cinema and received six toehr nominations at the 2014 National Academy of Video Game Trade Reviewers (NAVGTR). 
+**Role**
+Cinematic Artist  
+Additional Design  
+
+**Release**
+Episode 1: "Faith": October 11, 2013  
+Episode 2: "Smoke & Mirrors": February 4, 2014  
+Episode 3: "A Crooked Mile": April 8, 2014  
+Episode 4: "In Sheep's Clothing": May 27, 2014  
+Episode 5: "Cry Wolf": July 8, 2014   
+
+**Responsibilities**
+Cinematic Design  
+Level Design  
+Puzzle Design  
+Gameplay Scripting (LUA)  
+
+
+*The Wolf Among Us* is an episodic adventure game based on Bill WIllingham's *Fables* comic book series. The game's story serves as a prequel, set twenty years before the events of *Fables*
+*The Wofl Among Us* won Best Direction in a Game Cinema and received six other nominations at the 2014 National Academy of Video Game Trade Reviewers (NAVGTR). 
 
 As a **Cinematic Artist** on *The Wolf Among Us*, I was responsible for:
 

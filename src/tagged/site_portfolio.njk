@@ -4,6 +4,7 @@ permalink: "tagged/site_portfolio/index.html"
 title: "Jolie Menzel - Games Portfolio"
 ---
 
+
 {# Collect portfolio items and build facet list #}
 {% set items  = collections.posts | withTag('site_portfolio') | sortByOrder %}
 {% set facets = items | facetTags(['site_portfolio']) %}
@@ -16,9 +17,11 @@ title: "Jolie Menzel - Games Portfolio"
   {% endfor %}
 </div>
 
+This is a selection of shipped games I’ve worked on in various roles. Click any title to see my role and contributions.
+
 {# Compact status line #}
 <div class="tag-header">
-  <span class="tag-subtle">Showing all{% if items | length %} {{ items | length }}{% endif %}</span>
+  <span class="tag-subtle">Showing All{% if items | length %} {{ items | length }}{% endif %}</span>
 </div>
 
 <div class="grid" data-cols="3">

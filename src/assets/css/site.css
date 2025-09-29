@@ -309,6 +309,43 @@ em,i{ font-style:italic }
 
 .hero-caption { font-size:.9rem; opacity:.75; margin-top:.5rem; }
 
+/* =========================================
+   image and text arrangements
+   ========================================= */
+.post-body .side-by-side{
+  --img-col: 40%;
+  display: grid;
+  grid-template-columns: minmax(180px, var(--img-col)) 1fr;
+  gap: 1rem;
+  align-items: start;         /* top-align both items by default */
+  margin: 1rem 0;
+}
+
+/* Keep long lines/URLs from overflowing the text column */
+.post-body .side-by-side > div { min-width: 0; }
+
+/* Optional helpers for L/R order */
+.post-body .side-by-side.left  img { order: 1; }
+.post-body .side-by-side.left  div { order: 2; }
+.post-body .side-by-side.right img { order: 2; }
+.post-body .side-by-side.right div { order: 1; }
+
+/* Opt-in: vertically center the text column relative to the image */
+.post-body .side-by-side.v-center > div { align-self: center; }
+/* Keep the image top-aligned even when v-center is used */
+.post-body .side-by-side.v-center img { align-self: start; }
+
+/* Mobile: stack + reset any vertical alignment overrides */
+@media (max-width: 800px){
+  .post-body .side-by-side{
+    grid-template-columns: 1fr;
+  }
+  .post-body .side-by-side.v-center > div,
+  .post-body .side-by-side.v-center img{
+    align-self: auto;
+  }
+}
+
 
 /* =========================================
    Video embeds 
@@ -329,7 +366,7 @@ em,i{ font-style:italic }
   padding-top: calc(100% * var(--ratio-h, 9) / var(--ratio-w, 16));
 }
 
-/* Ratio presets (you can add more) */
+/* Ratio presets */
 .video-embed[data-ratio="16/9"] { --ratio-w:16; --ratio-h:9; }
 .video-embed[data-ratio="4/3"]  { --ratio-w:4;  --ratio-h:3; }
 .video-embed[data-ratio="1/1"]  { --ratio-w:1;  --ratio-h:1; }
@@ -343,6 +380,7 @@ em,i{ font-style:italic }
   border: 0;
   display: block;
 }
+
 
 /* =========================================
    Footer (dark)
