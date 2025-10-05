@@ -355,12 +355,39 @@ em,i{ font-style:italic }
   max-width: 100%;
 }
 
+
+/* Put narrow media column on the right */
+.post-body .side-by-side.right{
+  grid-template-columns: 1fr minmax(180px, var(--img-col));
+}
+
+/* EXPLICIT placement so both items stay on the SAME ROW */
+.post-body .side-by-side.right > :first-child{  /* media block: <img> or <a><img> */
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+}
+.post-body .side-by-side.right > :last-child{   /* text block */
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;          /* prevent overflow/wrapping issues */
+}
+
+/* Optional: remove inline baseline gaps from the media wrapper */
+.post-body .side-by-side > :first-child{ line-height: 0; }
+.post-body .side-by-side > :first-child img{ display:block; max-width:100%; height:auto; }
+
+/* Optional: remove default top margin on the first element in the text column */
+.post-body .side-by-side > :last-child > :first-child{ margin-top: 0; }
+
 /* optional: a slightly different cap on phones */
 @media (max-width: 800px){
   .post-body .side-by-side > :first-child img{
     max-height: var(--img-max-h-mobile);
   }
 }
+
+
 
 /* =========================================
    Video embeds 
@@ -438,17 +465,24 @@ em,i{ font-style:italic }
 /* ===== Modal (full-viewport) ========================================== */
 .jm-modal{
   position: fixed; inset: 0; z-index: 2000;
-  display: none; /* toggled via .is-open */
+  opacity: 0;
+  pointer-events: none;            /* not clickable when hidden */
+  transition: opacity 160ms ease;  /* fade */
 }
-.jm-modal.is-open{ display: block; }
+.jm-modal.is-open{
+  opacity: 1;
+  pointer-events: auto;            /* clickable when visible */
+}
 
 .jm-modal__backdrop{
-  position: absolute; inset: 0;
-  /* subtle dim without changing brand bg; can be made lighter/darker */
-  background: rgba(0,0,0,.2);
+  opacity: 0;
+  transition: opacity 160ms ease;
 }
+.jm-modal.is-open .jm-modal__backdrop{ opacity: 1; }
 
 .jm-modal__frame{
+  opacity: 0;
+  transition: opacity 160ms ease;
   position: absolute; inset: 0;
   background: var(--bg);          /* neutral (your site background) */
   color: var(--text);
@@ -460,6 +494,7 @@ em,i{ font-style:italic }
   padding: var(--modal-pad);
   box-shadow: 0 10px 40px rgba(0,0,0,.25);
 }
+.jm-modal.is-open .jm-modal__frame{ opacity: 1; }
 
 .jm-modal__close{
   appearance: none; border: 0; background: transparent; cursor: pointer;
@@ -491,7 +526,10 @@ em,i{ font-style:italic }
   max-height: 100%;
   width: auto; height: auto;
   object-fit: contain;             /* maintain aspect ratio on any screen */
+  opacity: 0;
+  transition: opacity 150ms ease;
 }
+.jm-modal__content--image img[src]{ opacity: 1; }
 
 /* When showing a post: constrain text width for readability */
 .jm-modal__content--post{
@@ -499,32 +537,18 @@ em,i{ font-style:italic }
   margin: 0 auto;
 }
 
+@media (prefers-reduced-motion: reduce){
+  .jm-modal,
+  .jm-modal__backdrop,
+  .jm-modal__frame,
+  .jm-modal__content--image img{
+    transition: none !important;
+  }
+}
+
 /* Optional: when the modal is open, lock page scroll */
 body.jm-no-scroll{ overflow: hidden; }
 
-/* Put narrow media column on the right */
-.post-body .side-by-side.right{
-  grid-template-columns: 1fr minmax(180px, var(--img-col));
-}
-
-/* EXPLICIT placement so both items stay on the SAME ROW */
-.post-body .side-by-side.right > :first-child{  /* media block: <img> or <a><img> */
-  grid-column: 2;
-  grid-row: 1;
-  align-self: start;
-}
-.post-body .side-by-side.right > :last-child{   /* text block */
-  grid-column: 1;
-  grid-row: 1;
-  min-width: 0;          /* prevent overflow/wrapping issues */
-}
-
-/* Optional: remove inline baseline gaps from the media wrapper */
-.post-body .side-by-side > :first-child{ line-height: 0; }
-.post-body .side-by-side > :first-child img{ display:block; max-width:100%; height:auto; }
-
-/* Optional: remove default top margin on the first element in the text column */
-.post-body .side-by-side > :last-child > :first-child{ margin-top: 0; }
 
 /* Modal gallery nav */
 .jm-modal__nav{
@@ -546,9 +570,6 @@ body.jm-no-scroll{ overflow: hidden; }
 .jm-modal__next{ right: var(--modal-pad); }
 .jm-modal.is-image .jm-modal__nav{ display: inline-flex; }
 
-
-/* When we’re showing an image, reveal the nav */
-.jm-modal.is-image .jm-modal__nav{ display: inline-flex; }
 .jm-modal.is-image .jm-modal__content{
   padding-left: calc(var(--nav-size) + var(--nav-gap));
   padding-right: calc(var(--nav-size) + var(--nav-gap));
