@@ -340,6 +340,28 @@ em,i{ font-style:italic }
   }
 }
 
+/* Per-block image height cap for side-by-side media */
+.post-body .side-by-side{
+  /* default: no cap */
+  --img-max-h: none;
+  --img-max-h-mobile: var(--img-max-h);
+}
+
+.post-body .side-by-side > :first-child img{
+  /* keep aspect ratio; scale down if taller than cap */
+  max-height: var(--img-max-h);
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+/* optional: a slightly different cap on phones */
+@media (max-width: 800px){
+  .post-body .side-by-side > :first-child img{
+    max-height: var(--img-max-h-mobile);
+  }
+}
+
 /* =========================================
    Video embeds 
    ========================================= */
@@ -432,6 +454,11 @@ em,i{ font-style:italic }
   color: var(--text);
   display: grid;
   grid-template-rows: auto 1fr;
+  --modal-pad: clamp(12px, 2vw, 28px);
+  --nav-size: 44px;      /* matches .jm-modal__nav width/height */
+  --nav-gap: 8px;    
+  padding: var(--modal-pad);
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
 }
 
 .jm-modal__close{
@@ -443,15 +470,21 @@ em,i{ font-style:italic }
 .jm-modal__close:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
 
 .jm-modal__content{
-  overflow: auto;                  /* scroll when content is tall */
-  padding: clamp(12px, 2vw, 24px);
+  overflow: auto;
   height: 100%;
+  border: none;
+  border-radius: 0;
+  background: var(--bg);
+  box-shadow: none;
+  overflow: auto;
+  padding: clamp(8px, 1.5vw, 20px); 
 }
 
 /* When showing an image */
 .jm-modal__content--image{
   display: grid;
   place-items: center;
+  padding: 0;
 }
 .jm-modal__content--image img{
   max-width: 100%;
@@ -493,3 +526,30 @@ body.jm-no-scroll{ overflow: hidden; }
 /* Optional: remove default top margin on the first element in the text column */
 .post-body .side-by-side > :last-child > :first-child{ margin-top: 0; }
 
+/* Modal gallery nav */
+.jm-modal__nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--nav-size);
+  height: var(--nav-size);
+  border: 0; border-radius: 999px;
+  background: rgba(0,0,0,.45);
+  color: #fff; font-size: 28px; line-height: 1;
+  display: none;                 /* hidden unless an image gallery is active */
+  align-items: center; justify-content: center;
+  cursor: pointer;
+}
+
+.jm-modal__nav:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
+.jm-modal__prev{ left: var(--modal-pad); }
+.jm-modal__next{ right: var(--modal-pad); }
+.jm-modal.is-image .jm-modal__nav{ display: inline-flex; }
+
+
+/* When we’re showing an image, reveal the nav */
+.jm-modal.is-image .jm-modal__nav{ display: inline-flex; }
+.jm-modal.is-image .jm-modal__content{
+  padding-left: calc(var(--nav-size) + var(--nav-gap));
+  padding-right: calc(var(--nav-size) + var(--nav-gap));
+}

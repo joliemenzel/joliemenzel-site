@@ -93,96 +93,152 @@
   </script>
 
   <div id="jm-modal" class="jm-modal" aria-hidden="true">
-    <div class="jm-modal__backdrop" data-close="true">
-    </div>
+    <div class="jm-modal__backdrop" data-close="true"></div>
     <div class="jm-modal__frame" role="dialog" aria-modal="true" aria-label="Preview">
-      <button class="jm-modal__close" type="button" aria-label="Close" data-close="true">✕
-      </button>
-      <div class="jm-modal__content" id="jm-modal-content">
-      </div>
+      <button class="jm-modal__close" type="button" aria-label="Close" data-close="true">✕</button>
+      <button class="jm-modal__nav jm-modal__prev" type="button" aria-label="Previous" data-prev>&lsaquo;</button>
+      <button class="jm-modal__nav jm-modal__next" type="button" aria-label="Next" data-next>&rsaquo;</button>
+      <div class="jm-modal__content" id="jm-modal-content"></div>
     </div>
   </div>
 
   <script>
-  (() => {
-    const modalRoot   = document.getElementById('jm-modal');
-    const contentWrap = document.getElementById('jm-modal-content');
-    const openClass   = 'is-open';
-    const noScroll    = 'jm-no-scroll';
+    (() => {
+      const modalRoot   = document.getElementById('jm-modal');
+      const contentWrap = document.getElementById('jm-modal-content');
+      const btnPrev     = modalRoot.querySelector('[data-prev]');
+      const btnNext     = modalRoot.querySelector('[data-next]');
+      const openClass   = 'is-open';
+      const imgClass    = 'is-image';
+      const noScroll    = 'jm-no-scroll';
 
-    const closeModal = () => {
-      modalRoot.classList.remove(openClass);
-      document.body.classList.remove(noScroll);
-      modalRoot.setAttribute('aria-hidden', 'true');
+      // --- gallery state ---
+      let gallery = { items: [], index: -1 }; // items: [{href, alt}], index of current
 
-      contentWrap.className = 'jm-modal__content';
-      contentWrap.innerHTML = '';
-    };
-    modalRoot.addEventListener('click', (e) => {
-      if (e.target.matches('[data-close], .jm-modal__backdrop')) closeModal();
-    });
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modalRoot.classList.contains(openClass)) closeModal();
-    });
+      const resetGallery = () => { gallery = { items: [], index: -1 }; };
 
-    const openModal = () => {
-      modalRoot.classList.add(openClass);
-      document.body.classList.add(noScroll);
-      modalRoot.setAttribute('aria-hidden', 'false');
-    };
+      // --- close/open ---
+      const closeModal = () => {
+        modalRoot.classList.remove(openClass, imgClass);
+        document.body.classList.remove(noScroll);
+        modalRoot.setAttribute('aria-hidden', 'true');
+        contentWrap.className = 'jm-modal__content';
+        contentWrap.innerHTML = '';
+        resetGallery();
+      };
 
-    const loadPostIntoModal = async (url) => {
-      contentWrap.classList.add('jm-modal__content--post');
-      contentWrap.innerHTML = '<div>Loading…</div>';
+      const openModal = (isImage=false) => {
+        modalRoot.classList.add(openClass);
+        if (isImage) modalRoot.classList.add(imgClass);
+        document.body.classList.add(noScroll);
+        modalRoot.setAttribute('aria-hidden', 'false');
+      };
 
-      try {
-        const res  = await fetch(url, { credentials: 'same-origin' });
-        const html = await res.text();
-        const doc  = new DOMParser().parseFromString(html, 'text/html');
+      // --- loaders ---
+      const showImageAt = (idx) => {
+        if (!gallery.items.length) return;
+        if (idx < 0) idx = gallery.items.length - 1;
+        if (idx >= gallery.items.length) idx = 0;
+        gallery.index = idx;
 
-        const body = doc.querySelector('.post-body') || doc.querySelector('#container') || doc.body;
+        const { href, alt } = gallery.items[idx];
+        contentWrap.className = 'jm-modal__content jm-modal__content--image';
+        contentWrap.innerHTML = '';
+        const img = new Image();
+        img.alt = alt || '';
+        img.decoding = 'async';
+        img.loading  = 'eager';
+        img.src = href;
+        contentWrap.appendChild(img);
 
-        contentWrap.innerHTML = body.innerHTML;
+        // (optional) preload neighbors
+        const pre = new Image(); pre.src = gallery.items[(idx+1)%gallery.items.length].href;
+        const pre2 = new Image(); pre2.src = gallery.items[(idx-1+gallery.items.length)%gallery.items.length].href;
+      };
 
-      } catch (err) {
-        contentWrap.innerHTML = `<p>Sorry—couldn’t load that post.</p>`;
-        console.error(err);
-      }
-    };
+      const loadPostIntoModal = async (url) => {
+        contentWrap.className = 'jm-modal__content jm-modal__content--post';
+        contentWrap.innerHTML = '<div>Loading…</div>';
+        try {
+          const res  = await fetch(url, { credentials: 'same-origin' });
+          const html = await res.text();
+          const doc  = new DOMParser().parseFromString(html, 'text/html');
+          const body = doc.querySelector('.post-body') || doc.querySelector('#container') || doc.body;
+          contentWrap.innerHTML = body.innerHTML;
+        } catch (err) {
+          contentWrap.innerHTML = `<p>Sorry—couldn’t load that post.</p>`;
+          console.error(err);
+        }
+      };
 
-    const loadImageIntoModal = (src, alt = '') => {
-      contentWrap.classList.add('jm-modal__content--image');
-      contentWrap.innerHTML = '';
-      const img = new Image();
-      img.alt = alt || '';
-      img.decoding = 'async';
-      img.loading  = 'eager';
-      img.src = src;
-      contentWrap.appendChild(img);
-    };
+      // --- events: close/backdrop/esc ---
+      modalRoot.addEventListener('click', (e) => {
+        if (e.target.matches('[data-close], .jm-modal__backdrop')) closeModal();
+      });
+      window.addEventListener('keydown', (e) => {
+        if (!modalRoot.classList.contains(openClass)) return;
+        if (e.key === 'Escape') closeModal();
+        if (modalRoot.classList.contains(imgClass)) {
+          if (e.key === 'ArrowRight') { e.preventDefault(); showImageAt(gallery.index + 1); }
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); showImageAt(gallery.index - 1); }
+        }
+      });
 
-    document.addEventListener('click', (e) => {
-      const a = e.target.closest('a[data-popup]');
-      if (!a) return;
+      // --- nav buttons ---
+      btnPrev.addEventListener('click', () => showImageAt(gallery.index - 1));
+      btnNext.addEventListener('click', () => showImageAt(gallery.index + 1));
 
-      const type = a.getAttribute('data-popup');   // "post" | "image"
-      const href = a.getAttribute('href');
+      // --- touch swipe (basic) ---
+      let touchX = null;
+      contentWrap.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, {passive:true});
+      contentWrap.addEventListener('touchend',   (e) => {
+        if (touchX == null) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 40 && modalRoot.classList.contains(imgClass)) {
+          if (dx < 0) showImageAt(gallery.index + 1); else showImageAt(gallery.index - 1);
+        }
+        touchX = null;
+      });
 
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank') return;
+      // --- click delegation: open image/post ---
+      document.addEventListener('click', (e) => {
+        const a = e.target.closest('a[data-popup]');
+        if (!a) return;
 
-      if (type === 'post') {
-        e.preventDefault();
-        openModal();
-        loadPostIntoModal(href);
-      } else if (type === 'image') {
-        e.preventDefault();
-        openModal();
-        const alt = (a.querySelector('img') && a.querySelector('img').alt) || a.getAttribute('data-alt') || '';
-        loadImageIntoModal(href, alt);
-      }
-    });
-  })();
-  </script>
+        const type = a.getAttribute('data-popup');   // "post" | "image"
+        const href = a.getAttribute('href');
+
+        // Don't hijack modified clicks
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank') return;
+
+        if (type === 'post') {
+          e.preventDefault();
+          openModal(false);
+          resetGallery();                 // gallery not used for post view
+          loadPostIntoModal(href);
+          return;
+          }
+
+        if (type === 'image') {
+          e.preventDefault();
+
+          const postBody = a.closest('.post-body') || document;
+          const links = Array.from(postBody.querySelectorAll('a[data-popup="image"]'));
+
+          gallery.items = links.map(link => ({
+            href: link.getAttribute('href'),
+            alt: (link.querySelector('img') && link.querySelector('img').alt) || link.getAttribute('data-alt') || ''
+          }));
+
+          gallery.index = Math.max(0, links.indexOf(a));
+
+          openModal(true);
+          showImageAt(gallery.index);
+        }
+      });
+    })();
+    </script>
+
 
 </body>
 </html>
