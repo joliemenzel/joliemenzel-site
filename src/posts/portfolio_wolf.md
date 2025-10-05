@@ -32,8 +32,10 @@ I assisted our designer in prototyping and iterating on some of the more involve
 
 In *The Wolf Among Us*, we aimed to let players examine clues in any order while keeping Bigby’s line of questioning and deductions feeling like a natural thread of facts and deductions.
 
-<div class="side-by-side right v-top" style="--img-col: 20%;">
-  <img src="/assets/img/posts/portfolio_wolf_flow1.png" alt="A simple investigation flow where characters show limited context of their investigation until the end.">
+<div class="side-by-side right v-top" style="--img-col: 70%;">
+  <a href="/assets/img/posts/portfolio_wolf_flow1.png" data-popup="image">
+    <img src="/assets/img/posts/portfolio_wolf_flow1.png" alt="A simple investigation flow where characters show limited context of their investigation until the end.">
+  </a>
   <div>
     <p>
 Many classic adventure games—including those Telltale made before <i>The Walking Dead</i>—often had characters investigating objects without much acknowledgment of what they had already discovered, with the “summation” of the clues happening only after the player had seen all relevant items.</p>
@@ -44,8 +46,10 @@ In [*The Walking Dead*]({{ collections.posts | postUrlBySlug('wd2012') | url }})
 
 For *Wolf*, we wanted to keep that context-rich, cinematic presentation while bringing back more non-linear setups so the player felt empowered to role-play their investigation. Because all cinematics at Telltale were hand-crafted, we also needed an approach that was efficient and didn’t explode scope through combinatorial clue deductions.
 
-<div class="side-by-side right v-top" style="--img-col: 20%;">
-  <img src="/assets/img/posts/portfolio_wolf_flow2.png" alt="A slightly more complex investigation setup where the player recieves more context as they collect item pairs.">
+<div class="side-by-side right v-top" style="--img-col: 70%;">
+  <a href="/assets/img/posts/portfolio_wolf_flow2.png" data-popup="image">
+    <img src="/assets/img/posts/portfolio_wolf_flow2.png" alt="A slightly more complex investigation setup where the player recieves more context as they collect item pairs.">
+  </a>
   <div>
     <p>
 Our first pass used narrative item pairs to reduce scope. Each clue depended on one clearly related partner, rather than on multiple combinations. This kept logic tight and authoring manageable. </p>
@@ -56,13 +60,14 @@ This first pass was a gameplay success. Because clue pairs were logically linked
 
 With the structure proven out, we focused on presentation. The deduction cutscenes worked well when players happened to collect pairs back-to-back, but context could be lost if a pair was completed far apart. For example, in a collection order like A–C–E–F–D–B, the A–B connection was often forgotten by playtesters.
 
-<div class="side-by-side right v-top" style="--img-col: 20%;">
-  <img src="/assets/img/posts/portfolio_wolf_flow3.png" alt="The final version of the Toad's Apartment flow, where additional cutscenes have been added to create better cinematic flow.">
-  <div>
-    <p>
-To address this, we added very short callback cutscenes that appended to a clue’s moment whenever a pair was successfully completed. These helped us re-establish spatial context and blocking for the paired items before cutting to Bigby for the connection beat, keeping cinematography clear and the logic legible.</p>
+<div class="side-by-side right v-top" style="--img-col:70%;">
+  <a href="/assets/img/posts/portfolio_wolf_flow3.png" data-popup="image">
+    <img src="/assets/img/posts/portfolio_wolf_flow3.png" alt="The shipping verison of the flow." />
+  </a>
+  <div><p>To address this, we added very short callback cutscenes that appended to a clue’s moment whenever a pair was successfully completed. These helped us re-establish spatial context and blocking for the paired items before cutting to Bigby for the connection beat, keeping cinematography clear and the logic legible.</p>
   </div>
 </div>
+
 
 This investigation became our model for subsequent investigation scenes in *The Wolf Among Us*. While later episodes featured fewer, less involved investigations as tension and action ramped up, this scene remained a reference for design, cinematics, and production on how to execute an investigation cleanly.
 
