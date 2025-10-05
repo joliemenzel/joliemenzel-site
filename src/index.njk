@@ -2,14 +2,24 @@
 layout: layout.njk
 title: "About"
 ---
-<h1>Jolie Menzel</h1>
-<p>Narrative & Visual Storytelling Leader | Design Director with AAA & Indie Expertise"</p>
+<div class="about-hero">
+  <figure class="about-hero__photoFrame" style="--zoom:1.50; --focus:60% 20%;">
+    <img class="about-hero__photo" src="/assets/img/about/profile.webp" alt="A photo of Jolie Menzel">
+  </figure>
 
+  <div class="about-hero__text">
+    <h1>Jolie Menzel</h1>
+    <p><b>Narrative & Visual Storytelling Leader | Design Director with AAA & Indie Expertise</b></p>
 
-{#
-This is an example of curating a section of content with tags.
+    <p>I’ve spent over 15 years leading narrative and design on everything from blockbuster franchises to experimental indies, writing for award-winning titles, and helping teams align story, systems, and player experience.</p>
+
+    <p>I’m currently the Studio Design Director at <a href="https://www.zunzunstudios.com/" target="_blank" rel="noopener noreferrer">Zunzún Studios</a>. Alongside my studio work, I do freelance consulting and writing. I also invest time in sharing what I’ve learned through presentations, podcasts, and mentorship programs.</p>
+    
+  </div>
+</div>
+
 <h2 class="section-title">Selected Work</h2>
-<div class="grid">
+<div class="grid" data-cols="3">
   {% for post in collections.posts | withTag('featured') | sortByOrder %}
     <div class="box">
       <a class="box-caption" href="{{ post.url }}">#</a>
@@ -18,11 +28,13 @@ This is an example of curating a section of content with tags.
     </div>
   {% endfor %}
 </div>
-#}
 
-<a href="/posts/portfolio_wolf/" data-popup="post">Read inline</a>
+<p>
+  <a class="link-btn" href="{{ '/tagged/site_portfolio/' | url }}">View my full Games Portfolio</a>
+</p>
 
 
-<h2 style="margin-top:24px;">Latest</h2>
-
-I made a website. :)
+<h2 style="margin-top:24px;">Contact</h2>
+I’m currently available for part-time consulting engagements.
+To get in touch, please message me on <a href="https://www.linkedin.com/in/joliemenzel/" target="_blank" rel="noopener noreferrer">LinkedIn</a>.
+<p></p>

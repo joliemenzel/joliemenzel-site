@@ -15,9 +15,9 @@
   --accent: var(--red);
   --text:   var(--black);
   --link:   var(--black);
-  --bg:     #FFFFFF;
+  --bg:     #EBEBEB;
   --thumbBg:var(--lg);
-  --hoverLink: #FFFFFF;
+  --hoverLink: #EBEBEB;
   --borders:   var(--black);
   --smallBorders: var(--mg);
 
@@ -50,6 +50,25 @@ body{
 img{ max-width:100%; height:auto; display:block }
 a{ color:var(--link); text-decoration:none }
 a:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
+
+/* >>> CONTENT LINK STYLE (posts + NJK pages) — excludes button-like anchors <<< */
+.post-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption),
+.page-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption){
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1.5px;
+}
+.post-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):hover,
+.post-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):focus,
+.page-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):hover,
+.page-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):focus{
+  text-decoration-thickness: 3px;
+}
+.post-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):visited,
+.page-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):visited{
+  color: color-mix(in srgb, var(--accent) 80%, black);
+}
 
 /* Headings: Playfair */
 h1,h2,h3{ font-family:var(--font-serif); color:var(--black); margin:0 0 .5em }
@@ -121,10 +140,7 @@ em,i{ font-style:italic }
 
 /* =========================================
    Percent-based grid sizing (replaces old .grid/.box rules)
-   - ~3 columns at wide sizes (32% min track)
-   - narrows the grid when only 1–2 cards so they don't look gigantic
    ========================================= */
-/* Default: percent-based grid (~3 cols) */
 .grid{
   display: grid;
   gap: var(--card-gap);
@@ -142,29 +158,20 @@ em,i{ font-style:italic }
   margin-inline: auto;
 }
 
-/* ----- Per-page control: fixed columns -----
-   Set data-cols="N" on .grid to force N columns.
-   We cap the overall grid width so cards don’t grow too big on huge screens. */
-.grid[data-cols]{
-  justify-content: center;
-  margin-inline: auto;
+/* ----- Per-page control: fixed columns ----- */
+.grid[data-cols]{ justify-content:center; margin-inline:auto; }
+.grid[data-cols="1"]{ grid-template-columns:repeat(1,minmax(0,1fr)); max-width:calc(1 * var(--fixed-col-max) + 0 * var(--card-gap)) }
+.grid[data-cols="2"]{ grid-template-columns:repeat(2,minmax(0,1fr)); max-width:calc(2 * var(--fixed-col-max) + 1 * var(--card-gap)) }
+.grid[data-cols="3"]{ grid-template-columns:repeat(3,minmax(0,1fr)); max-width:calc(3 * var(--fixed-col-max) + 2 * var(--card-gap)) }
+.grid[data-cols="4"]{ grid-template-columns:repeat(4,minmax(0,1fr)); max-width:calc(4 * var(--fixed-col-max) + 3 * var(--card-gap)) }
+
+a[data-popup]{
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: .14em;
+  text-decoration-thickness: 1.5px;
 }
-.grid[data-cols="1"]{
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  max-width: calc(1 * var(--fixed-col-max) + 0 * var(--card-gap));
-}
-.grid[data-cols="2"]{
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-width: calc(2 * var(--fixed-col-max) + 1 * var(--card-gap));
-}
-.grid[data-cols="3"]{
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: calc(3 * var(--fixed-col-max) + 2 * var(--card-gap));
-}
-.grid[data-cols="4"]{
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  max-width: calc(4 * var(--fixed-col-max) + 3 * var(--card-gap));
-}
+a[data-popup]:hover{ text-decoration-thickness: 3px }
 
 /* Card / thumbnail */
 .box{
@@ -216,7 +223,6 @@ em,i{ font-style:italic }
   margin-left: 6px;
 }
 
-
 /* =========================================
    Featured strip (optional)
    ========================================= */
@@ -242,18 +248,39 @@ em,i{ font-style:italic }
 .about .bio{ font-family:var(--font-sans) }
 .about .pull{ font-family:var(--font-serif); color:var(--pink) }
 
-/* =========================================
-   Buttons
-   ========================================= */
-.btn{
-  display:inline-block; padding:10px 16px; border-radius:999px;
-  font-family:var(--font-sans); font-weight:600;
-  transition: all .2s ease; text-decoration:none;
+.about-hero{
+  display: grid;
+  grid-template-columns: minmax(160px, 280px) 1fr; 
+  gap: 18px;
+  align-items: start;
+  margin: 12px 0 28px;
 }
-.btn-outline{ background:#fff; color:var(--black); border:2px solid var(--black) }
-.btn-outline:hover{ background:var(--red); color:#fff; border-color:var(--red) }
-.btn-filled{ background:var(--pink); color:#fff; border:2px solid var(--pink) }
-.btn-filled:hover{ background:var(--red); border-color:var(--red) }
+.about-hero__photoFrame{
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  border-radius: 8px;
+  border: 2px solid var(--borders);
+  overflow: hidden;
+  background: var(--thumbBg);
+  margin: 0;
+}
+.about-hero__photo{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: var(--focus, 50% 50%);
+  transform: scale(var(--zoom, 1));
+  transform-origin: var(--focus, 50% 50%);
+}
+
+/* Mobile/vertical: stack with photo under the text */
+@media (max-width: 800px), (orientation: portrait){
+  .about-hero{ grid-template-columns: 1fr; }
+  .about-hero__text{ order: 1; }
+  .about-hero__photoFrame{ order: 2; max-width: 320px; }
+}
+.about-hero__text{ display: grid; gap: .5rem; }
 
 /* =========================================
    Tag filters (pills)
@@ -273,40 +300,16 @@ em,i{ font-style:italic }
 }
 .filter .pill:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
 
-
 /* =========================================
    Content details / misc
    ========================================= */
-.middle img{ max-width:100%; height:auto; display:block }  /* post images */
+.middle img{ max-width:100%; height:auto; display:block }
 .breadcrumb{ margin:0 0 8px; font-size:12px }
 .breadcrumb a{ text-decoration:none; border-bottom:1px dotted currentColor }
-
-.post-body img,
-.post-body iframe { display:block; max-width:100%; height:auto; margin:1rem 0; }
-.hero-caption { font-size:.9rem; opacity:.75; margin-top:.5rem; }
-
-/* links */
-
-.post-body a{
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1.5px;
-}
-
-.post-body a:hover,
-.post-body a:focus{
-  text-decoration-thickness: 2px;
-}
-
-.post-body a:visited{
-  color: color-mix(in srgb, var(--accent) 80%, black); /* slightly darker red */
-}
 
 /* Post body media defaults (don’t fight the shortcode’s margins) */
 .post-body img{ display:block; max-width:100%; height:auto; margin:1rem 0; }
 .post-body iframe{ display:block; max-width:100%; height:auto; margin:0; }
-
 .hero-caption { font-size:.9rem; opacity:.75; margin-top:.5rem; }
 
 /* =========================================
@@ -317,77 +320,83 @@ em,i{ font-style:italic }
   display: grid;
   grid-template-columns: minmax(180px, var(--img-col)) 1fr;
   gap: 1rem;
-  align-items: start;         /* top-align both items by default */
+  align-items: start;
   margin: 1rem 0;
 }
-
-/* Keep long lines/URLs from overflowing the text column */
 .post-body .side-by-side > div { min-width: 0; }
-
-/* Opt-in: vertically center the text column relative to the image */
 .post-body .side-by-side.v-center > div { align-self: center; }
-/* Keep the image top-aligned even when v-center is used */
 .post-body .side-by-side.v-center img { align-self: start; }
 
-/* Mobile: stack + reset any vertical alignment overrides */
 @media (max-width: 800px){
-  .post-body .side-by-side{
-    grid-template-columns: 1fr;
-  }
+  .post-body .side-by-side{ grid-template-columns: 1fr; }
   .post-body .side-by-side.v-center > div,
-  .post-body .side-by-side.v-center img{
-    align-self: auto;
-  }
+  .post-body .side-by-side.v-center img{ align-self: auto; }
 }
 
 /* Per-block image height cap for side-by-side media */
 .post-body .side-by-side{
-  /* default: no cap */
   --img-max-h: none;
   --img-max-h-mobile: var(--img-max-h);
 }
-
 .post-body .side-by-side > :first-child img{
-  /* keep aspect ratio; scale down if taller than cap */
   max-height: var(--img-max-h);
   width: auto;
   height: auto;
   max-width: 100%;
 }
 
-
 /* Put narrow media column on the right */
 .post-body .side-by-side.right{
   grid-template-columns: 1fr minmax(180px, var(--img-col));
 }
-
-/* EXPLICIT placement so both items stay on the SAME ROW */
-.post-body .side-by-side.right > :first-child{  /* media block: <img> or <a><img> */
-  grid-column: 2;
-  grid-row: 1;
-  align-self: start;
+.post-body .side-by-side.right > :first-child{
+  grid-column: 2; grid-row: 1; align-self: start;
 }
-.post-body .side-by-side.right > :last-child{   /* text block */
-  grid-column: 1;
-  grid-row: 1;
-  min-width: 0;          /* prevent overflow/wrapping issues */
+.post-body .side-by-side.right > :last-child{
+  grid-column: 1; grid-row: 1; min-width: 0;
 }
-
-/* Optional: remove inline baseline gaps from the media wrapper */
 .post-body .side-by-side > :first-child{ line-height: 0; }
 .post-body .side-by-side > :first-child img{ display:block; max-width:100%; height:auto; }
-
-/* Optional: remove default top margin on the first element in the text column */
 .post-body .side-by-side > :last-child > :first-child{ margin-top: 0; }
 
-/* optional: a slightly different cap on phones */
 @media (max-width: 800px){
   .post-body .side-by-side > :first-child img{
     max-height: var(--img-max-h-mobile);
   }
 }
 
+/* =========================================
+   Buttons
+   ========================================= */
+.btn{
+  display:inline-block; padding:10px 16px; border-radius:999px;
+  font-family:var(--font-sans); font-weight:600;
+  transition: all .2s ease; text-decoration:none;
+}
+.btn-outline{ background:#fff; color:var(--black); border:2px solid var(--black) }
+.btn-outline:hover{ background:var(--red); color:#fff; border-color:var(--red) }
+.btn-filled{ background:var(--pink); color:#fff; border:2px solid var(--pink) }
+.btn-filled:hover{ background:var(--red); border-color:var(--red) }
 
+/* =========================================
+   Link Buttons
+   ========================================= */
+.link-btn{
+  display:inline-flex; align-items:center; gap:.4em;
+  padding:6px 12px; border-radius:999px;
+  font-family:var(--font-sans); font-weight:600;
+  text-decoration:none; line-height:1;
+  transition:background-color .15s ease, color .15s ease, border-color .15s ease, transform .05s ease;
+  white-space:nowrap;
+  background:var(--accent); color:var(--bg); border:2px solid var(--accent);
+}
+.link-btn:hover{ background:var(--black); color:#fff; border-color:var(--black) }
+.link-btn:active{ transform: translateY(1px) }
+.link-btn:focus-visible{ outline:2px solid var(--black); outline-offset:2px; text-decoration:none }
+.link-btn--sm{ padding:4px 10px; font-size:.95em }
+.link-btn--lg{ padding:8px 16px; font-size:1.05em }
+.link-btn > svg{ width:1em; height:1em; flex:0 0 auto }
+@media (prefers-contrast: more){ .link-btn{ color:#fff } }
 
 /* =========================================
    Video embeds 
@@ -396,39 +405,26 @@ em,i{ font-style:italic }
   position: relative;
   width: 100%;
   margin: 1.5rem auto;
-  /* width will cap via inline --max set by the shortcode */
   max-width: var(--max, 100%);
 }
-
-/* Establish height with padding so the box always sizes itself */
 .video-embed::before{
   content: "";
   display: block;
-  /* default 16:9 */
   padding-top: calc(100% * var(--ratio-h, 9) / var(--ratio-w, 16));
 }
-
-/* Ratio presets */
 .video-embed[data-ratio="16/9"] { --ratio-w:16; --ratio-h:9; }
 .video-embed[data-ratio="4/3"]  { --ratio-w:4;  --ratio-h:3; }
 .video-embed[data-ratio="1/1"]  { --ratio-w:1;  --ratio-h:1; }
 .video-embed[data-ratio="21/9"] { --ratio-w:21; --ratio-h:9; }
-
 .video-embed iframe{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block;
 }
-
 
 /* =========================================
    Footer (dark)
    ========================================= */
 .footer{
-  border-top:4px solid var(--red);        /* accent line */
+  border-top:4px solid var(--red);
   background:var(--black);
   color:var(--lg);
 }
@@ -450,47 +446,32 @@ em,i{ font-style:italic }
 
 /* ===== Vertical / portrait fail-safe: force single-column stacks ===== */
 @media (orientation: portrait), (max-aspect-ratio: 1/1), (max-width: 800px) {
-  /* collapse every grid (even those with data-cols) to one column */
-  .grid,
-  .grid[data-cols]{
+  .grid, .grid[data-cols]{
     grid-template-columns: 1fr !important;
-    max-width: none !important;   /* don't clamp the grid width */
+    max-width: none !important;
     justify-content: stretch;
   }
-
-  /* optional: slightly tighter gutters on phones */
   :root{ --card-gap: 16px; }
 }
 
 /* ===== Modal (full-viewport) ========================================== */
 .jm-modal{
   position: fixed; inset: 0; z-index: 2000;
-  opacity: 0;
-  pointer-events: none;            /* not clickable when hidden */
-  transition: opacity 160ms ease;  /* fade */
-}
-.jm-modal.is-open{
-  opacity: 1;
-  pointer-events: auto;            /* clickable when visible */
-}
-
-.jm-modal__backdrop{
-  opacity: 0;
+  opacity: 0; pointer-events: none;
   transition: opacity 160ms ease;
 }
+.jm-modal.is-open{ opacity: 1; pointer-events: auto; }
+
+.jm-modal__backdrop{ opacity: 0; transition: opacity 160ms ease; }
 .jm-modal.is-open .jm-modal__backdrop{ opacity: 1; }
 
 .jm-modal__frame{
-  opacity: 0;
-  transition: opacity 160ms ease;
+  opacity: 0; transition: opacity 160ms ease;
   position: absolute; inset: 0;
-  background: var(--bg);          /* neutral (your site background) */
-  color: var(--text);
-  display: grid;
-  grid-template-rows: auto 1fr;
+  background: var(--bg); color: var(--text);
+  display: grid; grid-template-rows: auto 1fr;
   --modal-pad: clamp(12px, 2vw, 28px);
-  --nav-size: 44px;      /* matches .jm-modal__nav width/height */
-  --nav-gap: 8px;    
+  --nav-size: 44px; --nav-gap: 8px;    
   padding: var(--modal-pad);
   box-shadow: 0 10px 40px rgba(0,0,0,.25);
 }
@@ -499,77 +480,47 @@ em,i{ font-style:italic }
 .jm-modal__close{
   appearance: none; border: 0; background: transparent; cursor: pointer;
   font-size: 22px; line-height: 1;
-  margin-left: auto;
-  padding: 14px;
+  margin-left: auto; padding: 14px;
 }
 .jm-modal__close:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
 
 .jm-modal__content{
-  overflow: auto;
-  height: 100%;
-  border: none;
-  border-radius: 0;
-  background: var(--bg);
-  box-shadow: none;
-  overflow: auto;
+  overflow: auto; height: 100%;
+  border: none; border-radius: 0;
+  background: var(--bg); box-shadow: none;
   padding: clamp(8px, 1.5vw, 20px); 
 }
 
 /* When showing an image */
-.jm-modal__content--image{
-  display: grid;
-  place-items: center;
-  padding: 0;
-}
+.jm-modal__content--image{ display: grid; place-items: center; padding: 0; }
 .jm-modal__content--image img{
-  max-width: 100%;
-  max-height: 100%;
-  width: auto; height: auto;
-  object-fit: contain;             /* maintain aspect ratio on any screen */
-  opacity: 0;
-  transition: opacity 150ms ease;
+  max-width: 100%; max-height: 100%; width: auto; height: auto;
+  object-fit: contain; opacity: 0; transition: opacity 150ms ease;
 }
 .jm-modal__content--image img[src]{ opacity: 1; }
 
-/* When showing a post: constrain text width for readability */
-.jm-modal__content--post{
-  max-width: 900px;
-  margin: 0 auto;
-}
+/* When showing a post: constrain text width */
+.jm-modal__content--post{ max-width: 900px; margin: 0 auto; }
 
 @media (prefers-reduced-motion: reduce){
-  .jm-modal,
-  .jm-modal__backdrop,
-  .jm-modal__frame,
-  .jm-modal__content--image img{
+  .jm-modal, .jm-modal__backdrop, .jm-modal__frame, .jm-modal__content--image img{
     transition: none !important;
   }
 }
-
-/* Optional: when the modal is open, lock page scroll */
 body.jm-no-scroll{ overflow: hidden; }
-
 
 /* Modal gallery nav */
 .jm-modal__nav{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: var(--nav-size);
-  height: var(--nav-size);
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: var(--nav-size); height: var(--nav-size);
   border: 0; border-radius: 999px;
-  background: rgba(0,0,0,.45);
-  color: #fff; font-size: 28px; line-height: 1;
-  display: none;                 /* hidden unless an image gallery is active */
-  align-items: center; justify-content: center;
-  cursor: pointer;
+  background: rgba(0,0,0,.45); color: #fff; font-size: 28px; line-height: 1;
+  display: none; align-items: center; justify-content: center; cursor: pointer;
 }
-
 .jm-modal__nav:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
 .jm-modal__prev{ left: var(--modal-pad); }
 .jm-modal__next{ right: var(--modal-pad); }
 .jm-modal.is-image .jm-modal__nav{ display: inline-flex; }
-
 .jm-modal.is-image .jm-modal__content{
   padding-left: calc(var(--nav-size) + var(--nav-gap));
   padding-right: calc(var(--nav-size) + var(--nav-gap));

@@ -6,7 +6,7 @@
   "nav": [
     {"href": "/", "label": "About"},
     {"href": "/tagged/site_portfolio/", "label": "Games Portfolio"},
-    {"href": "/tagged/media/", "label": "Media"},
+    {"href": "/tagged/knowledge/", "label": "Knowledge Sharing"},
     {"href": "/tagged/contact/", "label": "Contact"}
   ],
 
