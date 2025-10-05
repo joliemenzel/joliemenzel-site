@@ -9,15 +9,15 @@ hero: "/assets/img/posts/portfolio_wtwtlw.jpg"
 
 *Where the Water Tastes Like Wine* is a narrative exploration game about collecting and sharing folk tales across Depression-era America. The game had almost 40 writers contributing, making the game a kind of games writing anthology. It features more than 200 short stories and is praised for art, voice work, and ambition
 
-**Role**
-Contributing Writer ("Ray")
+**Role**  
+Contributing Writer ("Ray")  
 
-**Release**
-February 28, 2018
+**Release**  
+February 28, 2018  
 
-**Responsibilities**
+**Responsibilities**  
 Writing  
-Implementation (ink inteagrated with Unity)  
+Implementation (ink integrated with Unity)    
 Mentoring  
 
 ## Selected Work

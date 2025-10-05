@@ -2,14 +2,12 @@
   "title": "Jolie Menzel",
   "description": "Narrative & Visual Storytelling Leader | Design Director with AAA & Indie Expertise",
   "favicon": "/assets/img/favicon.ico",
-  "email": "joliemenzel@gmail.com",
 
   "nav": [
     {"href": "/", "label": "About"},
     {"href": "/tagged/site_portfolio/", "label": "Games Portfolio"},
-    {"href": "/tagged/professional/", "label": "Professional"},
-    {"href": "/tagged/personal/", "label": "Personal Projects"},
-    {"href": "/tagged/", "label": "All tags"}
+    {"href": "/tagged/media/", "label": "Media"},
+    {"href": "/tagged/contact/", "label": "Contact"}
   ],
 
   "customTagPages": ["site_portfolio","personal"],
