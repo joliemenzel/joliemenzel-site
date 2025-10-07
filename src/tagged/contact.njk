@@ -8,16 +8,24 @@ title: "Contact"
   <h1>Contact</h1>
   <p>Have a project, opportunity, or question? Send a note below.</p>
 
-  <!-- Turnstile -->
+  <!-- Cloudflare Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
-  <form id="contactForm" class="contact-form" action="https://script.google.com/macros/s/AKfycbw4-pbRUhWQgo2e452YCAu7lGICI7DEv2kpqMPTtDFmyFZ_IRjUPKHnzKDTCTKxyTPKVQ/exec" method="POST">
-    <!-- Honeypot -->
+  <form id="contactForm"
+        class="contact-form"
+        action="https://script.google.com/macros/s/AKfycbw4-pbRUhWQgo2e452YCAu7lGICI7DEv2kpqMPTtDFmyFZ_IRjUPKHnzKDTCTKxyTPKVQ/exec"
+        method="POST">
+
+    {# Honeypot: invisible to humans, catches basic bots #}
     <div style="position:absolute; left:-9999px; opacity:0;">
       <label>Leave this blank
         <input type="text" name="_gotcha" autocomplete="off" tabindex="-1">
       </label>
     </div>
+
+    {# Optional: redirect back to your site after success
+       <input type="hidden" name="redirect" value="https://beta.joliemenzel.com/contact/thanks/">
+    #}
 
     <div class="field">
       <label for="name">Name <span aria-hidden="true">*</span></label>
@@ -34,10 +42,10 @@ title: "Contact"
       <textarea id="message" name="message" rows="6" required></textarea>
     </div>
 
-    <!-- Turnstile widget -->
+    <!-- Turnstile widget + hidden token field -->
     <div id="captchaWrap">
-      <div id="cf-widget"
-           class="cf-turnstile"
+      <input type="hidden" id="cfToken" name="cf-turnstile-response" value="">
+      <div class="cf-turnstile"
            data-sitekey="0x4AAAAAAB5MKNBoSZ0fhmm_"
            data-callback="cfSolved"
            data-expired-callback="cfExpired"
@@ -50,40 +58,37 @@ title: "Contact"
 </div>
 
 <script>
-  const btn = document.getElementById('sendBtn');
+  // Turnstile gating: keep Send disabled until the captcha returns a token
+  const btn  = document.getElementById('sendBtn');
   const hint = document.getElementById('captchaHint');
   const form = document.getElementById('contactForm');
+  const tok  = document.getElementById('cfToken');
 
-  window.cfSolved = function() {
+  // Called by Turnstile when solved (token passed as arg)
+  window.cfSolved = function(token){
+    tok.value = token;
     btn.disabled = false;
     hint.textContent = 'Great—captcha verified.';
   };
 
-  window.cfExpired = function() {
+  // Expired/error: clear token and disable again
+  window.cfExpired = function(){
+    tok.value = '';
     btn.disabled = true;
     hint.textContent = 'Captcha expired—please re-check the box.';
   };
-
-  window.cfError = function() {
+  window.cfError = function(){
+    tok.value = '';
     btn.disabled = true;
     hint.textContent = 'Captcha error—please reload the page and try again.';
   };
 
+  // Guard submit if somehow no token is present
   form.addEventListener('submit', function(e){
-    try {
-      // If Turnstile is available, block if no token
-      if (window.turnstile) {
-        // grab the first widget id on the page
-        const widgets = document.querySelectorAll('.cf-turnstile');
-        const wid = widgets.length ? widgets[0].getAttribute('data-widget-id') : null;
-        const token = wid ? turnstile.getResponse(wid) : null;
-        if (!token) {
-          e.preventDefault();
-          btn.disabled = true;
-          hint.textContent = 'Please complete the captcha before sending.';
-        }
-      }
-    } catch (_) {
+    if (!tok.value) {
+      e.preventDefault();
+      btn.disabled = true;
+      hint.textContent = 'Please complete the captcha before sending.';
     }
   });
 </script>
