@@ -1,9 +1,9 @@
 ---
 layout: post.njk
-title: "Gears 5 Post-launch (2021)"
+title: "Gears 5 Post-launch"
 slug: hivebusters
 date: 2021-04-15
-tags: ["site_portfolio","AAA"]
+tags: ["site_portfolio","AAA","writing"]
 hero: "/assets/img/posts/portfolio_gears5PostLaunch.jpg"
 ---
 

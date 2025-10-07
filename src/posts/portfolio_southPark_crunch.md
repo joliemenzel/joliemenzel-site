@@ -1,6 +1,6 @@
 ---
 layout: post.njk
-title: "South Park: The Fractured But Whole DLC: Bring the Crunch (2018)"
+title: "South Park: The Fractured But Whole DLC: Bring the Crunch"
 slug: casa
 date: 2018-07-31
 tags: ["site_portfolio","AAA","missions","writing","levels"]

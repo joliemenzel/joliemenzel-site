@@ -1,9 +1,9 @@
 ---
 layout: post.njk
-title: "South Park: The Fractured But Whole (2017)"
+title: "South Park: The Fractured But Whole"
 slug: fractured
 date: 2017-10-17
-tags: ["site_portfolio","AAA","missions","writing","levels","featured"]
+tags: ["site_portfolio","AAA","missions","writing","levels","systems","featured"]
 hero: "/assets/img/posts/portfolio_south_park_fractured.jpg"
 ---
 

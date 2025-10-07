@@ -3,7 +3,7 @@ layout: post.njk
 title: "Read Only Memories: Neurodiver"
 slug: neurodiver
 date: 2024-10-17
-tags: ["site_portfolio","indie"]
+tags: ["site_portfolio","indie","writing"]
 hero: "/assets/img/posts/portfolio_neurodiver.jpg"
 ---
 

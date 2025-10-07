@@ -1,6 +1,6 @@
 ---
 layout: post.njk
-title: "The Wolf Among Us (2013)"
+title: "The Wolf Among Us"
 slug: wolf
 date: 2013-10-20
 tags: ["site_portfolio","AA","cinematics","missions","levels","featured"]

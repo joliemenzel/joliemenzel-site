@@ -1,0 +1,86 @@
+{
+  "sections": [
+    {
+      "title": "Video Lectures",
+      "caption": "Talks on design and production topics.",
+      "items": [
+        {
+          "title": "Solving Puzzle Design",
+          "href": "https://www.youtube.com/watch?v=0xBJwrm9C8w",
+          "thumb": "/assets/img/site/gdc_16.png",
+          "desc": "As part of the Level Design Workshop at GDC 2016, I spoke about the findamentals of puzzle design, and how to use puzzles as part of the macro pacing at any scope, from single level to an entire game.",
+          "side": "left" 
+        },
+        {
+          "title": "A Narrative Approach to Level Design",
+          "href": "https://www.youtube.com/watch?v=FhKjv7CPUqw",
+          "thumb": "/assets/img/site/gdc_17.png",
+          "desc": "As part of the Level Design Workshop at GDC 2017, I spoke about how to analyze narratives from non-games media and apply their pillars to game design, be it a single level or a whole game.",
+          "side": "left" 
+        },
+        {
+          "title": "Casting Light on the Black Box",
+          "href": "https://gdcvault.com/play/1034526/Game-Narrative-Summit-Casting-Light",
+          "thumb": "/assets/img/site/gdc_24.png",
+          "desc": "As part of the Narrative Summit at GDC 2024, I spoke with actor Phillipe Bosher on the basics of voice acting for games, and how developers can best support their talent to get the best performances for their games. Our <a href=\"https://www.pabosher.com/gdc-bibliography\" target=\"_blank\" rel=\"noopener\">bibliography</a> contains links to many resources on acting, as well as example documentation for use in development and voice recording pipelines.",
+          "side": "left" 
+        }
+      ]
+    },
+    {
+      "title": "Slide Decks",
+      "caption": "Presentations designed to be read.",
+      "items": [
+        
+        {
+          "title": "3 C's of Game Design",
+          "href": "https://docs.google.com/presentation/d/1XW3q069CtCqK783FnQ1wW55Jeoot9TQ6TFwvy8aYCoo/edit?usp=sharing",
+          "thumb": "/assets/img/site/3cs.png",
+          "desc": "A brief primer to Character, Camera, Control in game design to educate teams on what they are and their importance in the early development of a video game.",
+          "side": "left" 
+        }
+      ]
+    },
+    
+    {
+      "title": "Podcasts",
+      "items": [
+        {
+          "title": "Script Lock - Episode 17",
+          "href": "https://scriptlock.simplecast.com/episodes/ep-17-jolie-menzel-teddy-diefenbach",
+          "thumb": "/assets/img/site/scriptlock.jpeg",
+          "desc": "I appeared on Script Lock in 2016 to chat with Teddy Dief about narrative expression in games, and how a team's composition can change their game's shape.",
+          "side": "left"
+        },
+        {
+          "title": "Script Lock - Episode 81",
+          "href": "https://scriptlock.simplecast.com/episodes/adam-dolin-jolie-menzel",
+          "thumb": "/assets/img/site/scriptlock.jpeg",
+          "desc": "I returned to Script Lock in 2025 to chat with Adam Dolin about various topics related to Narrative Design and writing on games.",
+          "side": "left"
+        }
+      ]
+    },
+
+    {
+      "title": "Mentorship",
+      "caption": "I've benefited greatly from mentors in varying stages of my career, so I pay it forward whenever I have the bandwidth to do so. These are organizations I have worked with in the past - if you are a developer, consider volunteering your time to these worthy causes! If you are looking for a mentorship, check my contact page to see my current mentorship status.",
+      "items": [
+        {
+          "title": "Gameheads",
+          "href": "https://gameheadsoakland.org/",
+          "thumb": "/assets/img/site/gameheads.png",
+          "desc": "I've been a mentor for Gameheads' Summer Accelerator Program (SAP) for more than 5 years, and occassionally do guest lectures for the students. As a mentor, I am paired with a junior game developer with interests that are aligned with my skills. As they they work on a team with other students to create a game over the course of the summer, I have weekly check-ins with them to give them guidance on working with a team and honing their craft, as well as providing career guidance.",
+          "side": "left"
+        },
+        {
+          "title": "Girls Make Games",
+          "href": "https://www.girlsmakegames.com/",
+          "thumb": "/assets/img/site/GirlsMakeGames.jpg",
+          "desc": "When I lived in the Bay Area, I had the wonderful opportunity to act as a Camp Mentor and Demo Day Judge for the San Francisco area Girls Make Games Summer Camp. I interacted with 8-18 year old game developers to give them creative guidance in their interactive work and answer questions about what it's like to work professional in the games industry.",
+          "side": "left"
+        }
+      ]
+    }
+  ]
+}

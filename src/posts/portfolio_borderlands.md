@@ -1,6 +1,6 @@
 ---
 layout: post.njk
-title: "Tales From the Borderlands (2014)"
+title: "Tales From the Borderlands"
 slug: borderlands
 date: 2014-11-14
 tags: ["site_portfolio","AA","levels","cinematics"]

@@ -1,0 +1,129 @@
+---
+layout: layout.njk
+permalink: "tagged/knowledge/index.html"
+title: "Knowledge Sharing"
+
+ks_thumb_ratio: "16/5" 
+ks_media_w: "50%"
+ks_row_gap: "28px"
+---
+
+{# ========= Page-local CSS (scoped) ========= #}
+<style>
+  .knowledge {
+    --ks-thumb-ratio: {{ ks_thumb_ratio | default('16/9') }};
+    --ks-media-w: {{ ks_media_w | default('40%') }};
+  }
+
+  .knowledge .ks-section { margin-block: 2.5rem 3rem; }
+  .knowledge .ks-caption {
+    color: var(--mg);
+    font-size: .95rem;
+    margin: .25rem 0 1rem 0;
+    max-width: 75ch;
+  }
+
+  .knowledge .ks-row { display: grid; gap: 1rem; align-items: center; }
+  @media (min-width: 900px){
+    .knowledge .ks-row            { grid-template-columns: var(--ks-media-w) 1fr; }
+    .knowledge .ks-row.right      { grid-template-columns: 1fr var(--ks-media-w); }
+    .knowledge .ks-row.right .ks-media { order: 2; }
+    .knowledge .ks-row.right .ks-text  { order: 1; }
+  }
+
+  .knowledge,
+  .knowledge .ks-section,
+  .knowledge .ks-article,
+  .knowledge .ks-row {
+    max-width: none;
+    margin-inline: 0;
+  }
+  .knowledge .ks-row {
+    justify-items: stretch;
+  }
+
+
+  .knowledge .ks-thumb {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--thumbBg);
+    aspect-ratio: var(--_ratio, var(--ks-thumb-ratio)); /* per-item > page default */
+    display: block;
+    text-decoration: none;
+  }
+  .knowledge .ks-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    filter: grayscale(100%);
+    transition: filter .2s ease, transform .2s ease;
+  }
+  .knowledge .ks-thumb:hover img,
+  .knowledge .ks-thumb:focus-visible img {
+    filter: none;
+    transform: scale(1.02);
+  }
+
+
+  .knowledge .ks-label {
+    position: absolute; inset: auto 0 0 0;
+    padding: .6rem .9rem;
+    background: rgba(0,0,0,.55);
+    color: #fff; font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: .18em;
+  }
+
+  .knowledge .ks-text p { margin: 0 0 .75rem 0; }
+
+  .knowledge { --ks-row-gap: {{ ks_row_gap | default('24px') }}; }
+
+  .knowledge .ks-article + .ks-article {
+    margin-top: var(--ks-row-gap);
+  }
+
+  .knowledge .ks-section > .ks-caption + .ks-article,
+  .knowledge .ks-section > .ks-caption + * > .ks-article:first-child {
+    margin-top: calc(var(--ks-row-gap) * 0.5);
+  }
+</style>
+
+{% macro ExtCard(item) %}
+  {% set ratio = item.ratio or false %}
+  <div class="ks-row {{ 'right' if item.side == 'right' }}">
+    <div class="ks-media">
+      <a class="ks-thumb"
+         href="{{ item.href }}"
+         target="_blank" rel="noopener noreferrer"
+         {% if ratio %} style="--_ratio: {{ ratio }}"{% endif %}>
+        <img src="{{ item.thumb }}" alt="{{ item.alt or item.title }}">
+        <div class="ks-label">{{ item.title }}</div>
+      </a>
+    </div>
+    <div class="ks-text">
+      <p>{{ item.desc | safe }}</p>
+    </div>
+  </div>
+{% endmacro %}
+
+
+<div class="knowledge">
+  <h1>{{ title }}</h1>
+  <p>This is a hub for my public talks, slides, and interviews. Everything opens in a new tab.</p>
+
+  {% for section in knowledge.sections %}
+    <section class="ks-section">
+      <h2>{{ section.title }}</h2>
+      {% if section.caption %}
+        <div class="ks-caption">{{ section.caption }}</div>
+      {% endif %}
+
+      {# No outer .grid—rows handle layout and go full width #}
+      {% for item in section.items %}
+        <article class="ks-article">
+          {{ ExtCard(item) }}
+        </article>
+      {% endfor %}
+    </section>
+  {% endfor %}
+</div>

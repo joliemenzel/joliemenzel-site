@@ -1,6 +1,6 @@
 ---
 layout: post.njk
-title: "South Park: Snow Day! (2024)"
+title: "South Park: Snow Day!"
 slug: snowday
 date: 2024-03-20
 tags: ["site_portfolio","AA","writing"]

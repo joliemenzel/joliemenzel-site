@@ -192,17 +192,19 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
 
 /* Title overlay */
 .box-caption-text{
-  position:absolute; left:0; right:0; bottom:0; z-index:4;
-  padding:10px 12px; font-size:14px; line-height:1.25;
-  font-family:var(--font-serif);
-  text-align:center;
-  color:var(--black);
-  background: linear-gradient(to top, rgba(235,235,235,.92), rgba(235,235,235,0));
-}
-.box:hover .box-caption-text{
+  position: absolute; inset: auto 0 0 0; /* bottom bar */
+  padding: .6rem .9rem;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-weight: 600;
   text-decoration: underline;
-  text-decoration-color: var(--pink);
-  text-underline-offset: 3px;
+  text-underline-offset: .18em;
+  z-index: 2;           /* above the .box-caption link */
+  pointer-events: none; /* link beneath still receives clicks */
+}
+.box:hover .box-caption-text,
+.box:focus-within .box-caption-text{
+  text-decoration-thickness: 2px;
 }
 
 /* Compact tag/status line for portfolio facets */

@@ -1,9 +1,9 @@
 ---
 layout: post.njk
-title: "Where The Water Tastes Like Wine (2018)"
+title: "Where The Water Tastes Like Wine"
 slug: wtwtlw
 date: 2018-02-28
-tags: ["site_portfolio","indie"]
+tags: ["site_portfolio","indie", "writing"]
 hero: "/assets/img/posts/portfolio_wtwtlw.jpg"
 ---
 

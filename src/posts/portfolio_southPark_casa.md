@@ -1,6 +1,6 @@
 ---
 layout: post.njk
-title: "South Park: The Fractured But Whole DLC: From Dusk Till Casa Bonita (2018)"
+title: "South Park: The Fractured But Whole DLC: From Dusk Till Casa Bonita"
 slug: casa
 date: 2018-03-20
 tags: ["site_portfolio","AAA","missions","writing","levels"]

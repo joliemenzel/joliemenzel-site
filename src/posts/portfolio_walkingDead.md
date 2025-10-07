@@ -1,6 +1,6 @@
 ---
 layout: post.njk
-title: "The Walking Dead (2012)"
+title: "The Walking Dead"
 slug: wd2012
 date: 2012-09-20
 tags: ["site_portfolio","AA","levels","cinematics"]
