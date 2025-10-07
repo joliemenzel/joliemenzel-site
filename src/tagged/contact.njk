@@ -1,6 +1,6 @@
 ---
 layout: layout.njk
-permalink: "tagged/contact/index.html"
+permalink: "/contact/index.html"
 title: "Contact"
 ---
 
@@ -8,13 +8,12 @@ title: "Contact"
   <h1>Contact</h1>
   <p>Have a project, opportunity, or question? Send a note below.</p>
 
+  <!-- Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
-  <form id="contactForm"
-        class="contact-form"
-        action="https://script.google.com/macros/s/AKfycbzGEN6mjV3NDp_iRdq0r8mPkRLKHm6n62ZOnclUHM_pO7TNVEc4BsB1U_-nC7BeIW840Q/exec"
-        method="POST"
-        novalidate>
+  <form class="contact-form"
+        action="https://script.google.com/macros/s/AKfycbw4-pbRUhWQgo2e452YCAu7lGICI7DEv2kpqMPTtDFmyFZ_IRjUPKHnzKDTCTKxyTPKVQ/exec"
+        method="POST">
 
     <div style="position:absolute; left:-9999px; opacity:0;">
       <label>Leave this blank
@@ -25,89 +24,24 @@ title: "Contact"
     <div class="field">
       <label for="name">Name <span aria-hidden="true">*</span></label>
       <input id="name" name="name" type="text" required autocomplete="name">
-      <small class="error" data-for="name" hidden>Required.</small>
     </div>
 
     <div class="field">
       <label for="email">Email <span aria-hidden="true">*</span></label>
       <input id="email" name="email" type="email" required autocomplete="email">
-      <small class="error" data-for="email" hidden>Enter a valid email.</small>
     </div>
 
     <div class="field">
       <label for="message">Message <span aria-hidden="true">*</span></label>
       <textarea id="message" name="message" rows="6" required></textarea>
-      <small class="error" data-for="message" hidden>Required.</small>
     </div>
 
     <!-- Turnstile widget -->
     <div class="cf-turnstile" data-sitekey="0x4AAAAAAB5MKNBoSZ0fhmm_"></div>
 
     <button class="btn btn-outline" type="submit">Send</button>
-    <p id="formStatus" role="status" aria-live="polite" class="status"></p>
   </form>
 </div>
-
-<script>
-(function(){
-  const form = document.getElementById('contactForm');
-  const statusEl = document.getElementById('formStatus');
-
-  function showErr(id, msg){
-    const input = document.getElementById(id);
-    const hint  = document.querySelector('.error[data-for="'+id+'"]');
-    input.setAttribute('aria-invalid','true');
-    if(hint){ hint.hidden = false; if(msg) hint.textContent = msg; }
-  }
-  function clearErr(id){
-    const input = document.getElementById(id);
-    const hint  = document.querySelector('.error[data-for="'+id+'"]');
-    input.removeAttribute('aria-invalid');
-    if(hint){ hint.hidden = true; }
-  }
-
-  ['name','email','message'].forEach(id=>{
-    document.getElementById(id).addEventListener('input', ()=> clearErr(id));
-  });
-
-  form.addEventListener('submit', async (e)=>{
-    // Native constraints first
-    if(!form.checkValidity()){
-      e.preventDefault();
-      ['name','email','message'].forEach(id=>{
-        const el = document.getElementById(id);
-        if(!el.checkValidity()){
-          const msg = el.validity.typeMismatch ? 'Enter a valid email.' : 'Required.';
-          showErr(id, msg);
-        }
-      });
-      statusEl.textContent = 'Please fill all fields.';
-      return;
-    }
-
-    e.preventDefault();
-    statusEl.textContent = 'Sending...';
-    try{
-      const res = await fetch(form.action, { method:'POST', body: new FormData(form) });
-      const data = await res.json();
-
-      if(data.ok){
-        form.reset();
-        statusEl.textContent = 'Thanks! Your message has been sent.';
-      }else{
-        // If server sent field errors, map email error nicely
-        const first = (data.errors && data.errors[0]) || 'Submission failed.';
-        statusEl.textContent = first;
-        if(first.toLowerCase().includes('email')) showErr('email','Enter a valid email.');
-      }
-    }catch(err){
-      statusEl.textContent = 'Network error. Please try again.';
-    }finally{
-      if(window.turnstile){ turnstile.reset(); }
-    }
-  });
-})();
-</script>
 
 <style>
 .contact-form{ max-width: 720px; }
@@ -116,11 +50,7 @@ title: "Contact"
   width: 100%; padding: 10px 12px; font: inherit; background: #fff;
   border: 1px solid var(--smallBorders); border-radius: 6px;
 }
-.field input[aria-invalid="true"], .field textarea[aria-invalid="true"]{
-  border-color: var(--red);
+.field input:invalid, .field textarea:invalid{
+  outline: none; box-shadow: none;
 }
-.error{ color: var(--red); font-size: .9em; }
-.status{ margin-top: 10px; }
 </style>
-
-
