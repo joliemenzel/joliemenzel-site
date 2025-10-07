@@ -11,10 +11,8 @@ title: "Contact"
   <!-- Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
-  <form class="contact-form"
-        action="https://script.google.com/macros/s/AKfycbw4-pbRUhWQgo2e452YCAu7lGICI7DEv2kpqMPTtDFmyFZ_IRjUPKHnzKDTCTKxyTPKVQ/exec"
-        method="POST">
-
+  <form id="contactForm" class="contact-form" action="https://script.google.com/macros/s/AKfycbw4-pbRUhWQgo2e452YCAu7lGICI7DEv2kpqMPTtDFmyFZ_IRjUPKHnzKDTCTKxyTPKVQ/exec" method="POST">
+    <!-- Honeypot -->
     <div style="position:absolute; left:-9999px; opacity:0;">
       <label>Leave this blank
         <input type="text" name="_gotcha" autocomplete="off" tabindex="-1">
@@ -37,11 +35,58 @@ title: "Contact"
     </div>
 
     <!-- Turnstile widget -->
-    <div class="cf-turnstile" data-sitekey="0x4AAAAAAB5MKNBoSZ0fhmm_"></div>
+    <div id="captchaWrap">
+      <div id="cf-widget"
+           class="cf-turnstile"
+           data-sitekey="0x4AAAAAAB5MKNBoSZ0fhmm_"
+           data-callback="cfSolved"
+           data-expired-callback="cfExpired"
+           data-error-callback="cfError"></div>
+      <small id="captchaHint" class="hint">Please verify you’re human to enable “Send”.</small>
+    </div>
 
-    <button class="btn btn-outline" type="submit">Send</button>
+    <button id="sendBtn" class="btn btn-outline" type="submit" disabled>Send</button>
   </form>
 </div>
+
+<script>
+  const btn = document.getElementById('sendBtn');
+  const hint = document.getElementById('captchaHint');
+  const form = document.getElementById('contactForm');
+
+  window.cfSolved = function() {
+    btn.disabled = false;
+    hint.textContent = 'Great—captcha verified.';
+  };
+
+  window.cfExpired = function() {
+    btn.disabled = true;
+    hint.textContent = 'Captcha expired—please re-check the box.';
+  };
+
+  window.cfError = function() {
+    btn.disabled = true;
+    hint.textContent = 'Captcha error—please reload the page and try again.';
+  };
+
+  form.addEventListener('submit', function(e){
+    try {
+      // If Turnstile is available, block if no token
+      if (window.turnstile) {
+        // grab the first widget id on the page
+        const widgets = document.querySelectorAll('.cf-turnstile');
+        const wid = widgets.length ? widgets[0].getAttribute('data-widget-id') : null;
+        const token = wid ? turnstile.getResponse(wid) : null;
+        if (!token) {
+          e.preventDefault();
+          btn.disabled = true;
+          hint.textContent = 'Please complete the captcha before sending.';
+        }
+      }
+    } catch (_) {
+    }
+  });
+</script>
 
 <style>
 .contact-form{ max-width: 720px; }
@@ -50,7 +95,7 @@ title: "Contact"
   width: 100%; padding: 10px 12px; font: inherit; background: #fff;
   border: 1px solid var(--smallBorders); border-radius: 6px;
 }
-.field input:invalid, .field textarea:invalid{
-  outline: none; box-shadow: none;
-}
+#sendBtn[disabled]{ opacity: .6; cursor: not-allowed; }
+#captchaWrap{ margin: 12px 0; }
+.hint{ display: block; font-size: .9em; color: var(--smallMuted, #666); margin-top: 6px; }
 </style>
