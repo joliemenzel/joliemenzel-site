@@ -1,17 +1,16 @@
-/* =========================================
-   Global design tokens (safe defaults)
-   These can be overridden by your inline :root
-   in layout.njk (which loads AFTER this file).
-   ========================================= */
+/* =======================
+   Global design tokens
+   (layout.njk defines :root BEFORE this file; these are fallbacks)
+   ======================= */
 :root{
   /* Brand palette */
-  --red:  #8A2D25;   /* sharp emphasis */
-  --pink: #E8B5BE;   /* soft emphasis */
-  --black:#1E1E1C;   /* text anchor */
-  --lg:   #EBEBEB;   /* light gray */
-  --mg:   #888C8C;   /* mid gray */
+  --red:  #8A2D25;
+  --pink: #E8B5BE;
+  --black:#1E1E1C;
+  --lg:   #EBEBEB;
+  --mg:   #888C8C;
 
-  /* Map to your site.json-driven variables (fallbacks) */
+  /* Site-color fallbacks (layout.njk may override via site.json) */
   --accent: var(--red);
   --text:   var(--black);
   --link:   var(--black);
@@ -21,22 +20,21 @@
   --borders:   var(--black);
   --smallBorders: var(--mg);
 
-  /* Fonts */
+  /* Typography */
   --font-sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   --font-serif:"Playfair Display", Georgia, "Times New Roman", serif;
-  --font: var(--font-sans);
 
-  /* Card sizing knobs (percent-based) */
-  --card-gap: 28px;     /* gutters */
-  --card-ratio: 16/9;   /* try 4/3 if you like it taller */
-  --single-width: 60%;  /* grid max-width when only 1 card */
-  --double-width: 75%;  /* grid max-width when exactly 2 cards */
-  --fixed-col-max: 340px; /* max width per card when columns are fixed */
+  /* Layout knobs */
+  --card-gap: 28px;
+  --card-ratio: 16/9;
+  --single-width: 60%;
+  --double-width: 75%;
+  --fixed-col-max: 340px;
 }
 
-/* =========================================
+/* =======================
    Base
-   ========================================= */
+   ======================= */
 *{ box-sizing:border-box }
 html,body{ height:100% }
 body{
@@ -51,7 +49,18 @@ img{ max-width:100%; height:auto; display:block }
 a{ color:var(--link); text-decoration:none }
 a:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
 
-/* >>> CONTENT LINK STYLE (posts + NJK pages) — excludes button-like anchors <<< */
+h1,h2,h3{ font-family:var(--font-serif); color:var(--text); margin:0 0 .5em }
+em,i{ font-style:italic }
+
+#container{
+  max-width:1100px;
+  margin:24px auto;
+  padding:0 24px;
+}
+
+/* =======================
+   Content link style (post & page bodies)
+   ======================= */
 .post-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption),
 .page-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption){
   color: var(--accent);
@@ -60,8 +69,8 @@ a:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
   text-decoration-thickness: 1.5px;
 }
 .post-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):hover,
-.post-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):focus,
 .page-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):hover,
+.post-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):focus,
 .page-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):focus{
   text-decoration-thickness: 3px;
 }
@@ -70,28 +79,12 @@ a:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
   color: color-mix(in srgb, var(--accent) 80%, black);
 }
 
-/* Headings: Playfair */
-h1,h2,h3{ font-family:var(--font-serif); color:var(--black); margin:0 0 .5em }
-em,i{ font-style:italic }
+/* Optional helper for links outside those containers */
+a.is-accent { color: var(--accent); }
 
-/* Page content container (centered) */
-#container{
-  max-width:1100px;
-  margin:24px auto;
-  padding:0 24px;
-}
-
-/* =========================================
+/* =======================
    Sticky top navigation
-   Markup expected:
-   <header class="navbar">
-     <a class="brand brand--logo">…</a>    ← pinned left
-     <div class="inner">                    ← centered content
-       <div class="brand brand--text">Name</div>
-       <nav class="navlinks">…</nav>
-     </div>
-   </header>
-   ========================================= */
+   ======================= */
 .navbar{
   position:sticky; top:0; z-index:1000;
   display:grid; grid-template-columns:auto 1fr; align-items:center;
@@ -101,54 +94,46 @@ em,i{ font-style:italic }
   backdrop-filter: saturate(1.2) blur(6px);
   transition: background .2s ease, border-color .2s ease;
 }
-
-/* Left-pinned logo */
 .brand--logo{
   justify-self:start;
   padding-left:16px;
   text-decoration:none; color:var(--text); font-weight:700;
 }
 .brand-image{ height:32px; width:auto; vertical-align:middle }
-
-/* Centered title + link row (slightly wider than content) */
 .navbar .inner{
   grid-column:2;
-  max-width:1200px;        /* ribbon width */
+  max-width:1200px;
   margin:0 auto;
   padding:8px 24px;
   display:flex; flex-direction:column; align-items:center; gap:6px;
 }
 .brand--text{ font-weight:700; font-family:var(--font-serif) }
-
-/* Nav links: uppercase, spaced, pill hover */
 .navlinks{
   display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
   text-transform:uppercase; letter-spacing:.12em; font-weight:600;
   font-family:var(--font-sans);
 }
 .navbar .navlinks a{
-  color:var(--black);
+  color:var(--text);
   border-radius:999px;
   padding:6px 12px;
 }
 .navbar .navlinks a:hover,
 .navbar .navlinks a:focus{
-  background:var(--red);
+  background:var(--accent);  /* use accent so dark mode gets brighter red */
   color:#fff;
   text-decoration:none;
 }
 
-/* =========================================
-   Percent-based grid sizing (replaces old .grid/.box rules)
-   ========================================= */
+/* =======================
+   Grid / boxes
+   ======================= */
 .grid{
   display: grid;
   gap: var(--card-gap);
   grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
   justify-content: center;
 }
-
-/* Only apply “shrink when 1–2 items” on auto grids (no fixed column count) */
 .grid:not([data-cols]):not(:has(> .box:nth-child(2))){
   max-width: var(--single-width);
   margin-inline: auto;
@@ -157,8 +142,6 @@ em,i{ font-style:italic }
   max-width: var(--double-width);
   margin-inline: auto;
 }
-
-/* ----- Per-page control: fixed columns ----- */
 .grid[data-cols]{ justify-content:center; margin-inline:auto; }
 .grid[data-cols="1"]{ grid-template-columns:repeat(1,minmax(0,1fr)); max-width:calc(1 * var(--fixed-col-max) + 0 * var(--card-gap)) }
 .grid[data-cols="2"]{ grid-template-columns:repeat(2,minmax(0,1fr)); max-width:calc(2 * var(--fixed-col-max) + 1 * var(--card-gap)) }
@@ -173,7 +156,6 @@ a[data-popup]{
 }
 a[data-popup]:hover{ text-decoration-thickness: 3px }
 
-/* Card / thumbnail */
 .box{
   position:relative;
   aspect-ratio: var(--card-ratio);
@@ -186,28 +168,22 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   filter: grayscale(100%); transition: filter .35s ease;
 }
 .box:hover img{ filter:none }
-
-/* Clickable overlay anchor */
 .box-caption{ position:absolute; inset:0; display:block; text-indent:-9999px; z-index:5 }
-
-/* Title overlay */
 .box-caption-text{
-  position: absolute; inset: auto 0 0 0; /* bottom bar */
+  position: absolute; inset: auto 0 0 0;
   padding: .6rem .9rem;
   background: rgba(0,0,0,.55);
   color: #fff;
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: .18em;
-  z-index: 2;           /* above the .box-caption link */
-  pointer-events: none; /* link beneath still receives clicks */
-}
-.box:hover .box-caption-text,
-.box:focus-within .box-caption-text{
-  text-decoration-thickness: 2px;
+  z-index: 2;
+  pointer-events: none;
 }
 
-/* Compact tag/status line for portfolio facets */
+/* =======================
+   Tag header / About
+   ======================= */
 .tag-header{
   margin: 6px 0 14px;
   font-family: var(--font-sans);
@@ -217,7 +193,7 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: var(--mg); 
+  color: var(--mg);
 }
 .tag-header .tag-name{
   font-size: 14px;
@@ -225,9 +201,6 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   margin-left: 6px;
 }
 
-/* =========================================
-   Featured strip (optional)
-   ========================================= */
 .featured{ background:var(--mg); color:#fff; padding:36px 0 }
 .featured .wrap{
   max-width:1100px; margin:0 auto; padding:0 24px;
@@ -237,10 +210,7 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
 .featured h2{ font-family:var(--font-serif); color:#fff; margin:0 0 8px }
 .featured .sub{ font-family:var(--font-sans); color: #E0E0E0; margin:0 0 12px }
 
-/* =========================================
-   About section
-   ========================================= */
-.about{ background:var(--lg); padding:48px 0 }
+.about{ background:var(--thumbBg); padding:48px 0 }
 .about .wrap{
   max-width:1100px; margin:0 auto; padding:0 24px;
   display:grid; gap:24px; grid-template-columns:1fr 1.2fr;
@@ -275,8 +245,6 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   transform: scale(var(--zoom, 1));
   transform-origin: var(--focus, 50% 50%);
 }
-
-/* Mobile/vertical: stack with photo under the text */
 @media (max-width: 800px), (orientation: portrait){
   .about-hero{ grid-template-columns: 1fr; }
   .about-hero__text{ order: 1; }
@@ -284,39 +252,43 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
 }
 .about-hero__text{ display: grid; gap: .5rem; }
 
-/* =========================================
-   Tag filters (pills)
-   ========================================= */
+/* =======================
+   Filter pills
+   ======================= */
 .filter{ display:flex; align-items:center; gap:8px; margin:8px 0 16px; font-family:var(--font-sans) }
 .filter .pill{
   appearance:none; -webkit-appearance:none;
-  border:1px solid var(--black);
-  background:#fff;
+  border:1px solid var(--borders);
+  background:var(--bg);
+  color: var(--text);
   padding:4px 10px; border-radius:999px;
   font-size:12px; letter-spacing:.06em; text-transform:uppercase;
   cursor:pointer;
 }
-.filter .pill:hover{ background:var(--red); color:#fff; border-color:var(--red) }
+.filter .pill:hover{
+  background: var(--accent);
+  color:#fff;
+  border-color: var(--accent);
+}
 .filter .pill[aria-pressed="true"], .filter .pill.active{
-  background:var(--red); color:#fff; border-color:var(--red)
+  background: var(--accent);
+  color:#fff;
+  border-color: var(--accent);
 }
 .filter .pill:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
 
-/* =========================================
-   Content details / misc
-   ========================================= */
+/* =======================
+   Misc content
+   ======================= */
 .middle img{ max-width:100%; height:auto; display:block }
 .breadcrumb{ margin:0 0 8px; font-size:12px }
 .breadcrumb a{ text-decoration:none; border-bottom:1px dotted currentColor }
 
-/* Post body media defaults (don’t fight the shortcode’s margins) */
 .post-body img{ display:block; max-width:100%; height:auto; margin:1rem 0; }
 .post-body iframe{ display:block; max-width:100%; height:auto; margin:0; }
 .hero-caption { font-size:.9rem; opacity:.75; margin-top:.5rem; }
 
-/* =========================================
-   image and text arrangements
-   ========================================= */
+/* Side-by-side */
 .post-body .side-by-side{
   --img-col: 40%;
   display: grid;
@@ -328,61 +300,39 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
 .post-body .side-by-side > div { min-width: 0; }
 .post-body .side-by-side.v-center > div { align-self: center; }
 .post-body .side-by-side.v-center img { align-self: start; }
-
 @media (max-width: 800px){
   .post-body .side-by-side{ grid-template-columns: 1fr; }
   .post-body .side-by-side.v-center > div,
   .post-body .side-by-side.v-center img{ align-self: auto; }
 }
-
-/* Per-block image height cap for side-by-side media */
-.post-body .side-by-side{
-  --img-max-h: none;
-  --img-max-h-mobile: var(--img-max-h);
-}
+.post-body .side-by-side{ --img-max-h: none; --img-max-h-mobile: var(--img-max-h); }
 .post-body .side-by-side > :first-child img{
   max-height: var(--img-max-h);
-  width: auto;
-  height: auto;
-  max-width: 100%;
+  width: auto; height: auto; max-width: 100%;
 }
-
-/* Put narrow media column on the right */
-.post-body .side-by-side.right{
-  grid-template-columns: 1fr minmax(180px, var(--img-col));
-}
-.post-body .side-by-side.right > :first-child{
-  grid-column: 2; grid-row: 1; align-self: start;
-}
-.post-body .side-by-side.right > :last-child{
-  grid-column: 1; grid-row: 1; min-width: 0;
-}
+.post-body .side-by-side.right{ grid-template-columns: 1fr minmax(180px, var(--img-col)); }
+.post-body .side-by-side.right > :first-child{ grid-column: 2; grid-row: 1; align-self: start; }
+.post-body .side-by-side.right > :last-child{ grid-column: 1; grid-row: 1; min-width: 0; }
 .post-body .side-by-side > :first-child{ line-height: 0; }
-.post-body .side-by-side > :first-child img{ display:block; max-width:100%; height:auto; }
 .post-body .side-by-side > :last-child > :first-child{ margin-top: 0; }
-
 @media (max-width: 800px){
-  .post-body .side-by-side > :first-child img{
-    max-height: var(--img-max-h-mobile);
-  }
+  .post-body .side-by-side > :first-child img{ max-height: var(--img-max-h-mobile); }
 }
 
-/* =========================================
+/* =======================
    Buttons
-   ========================================= */
+   ======================= */
 .btn{
   display:inline-block; padding:10px 16px; border-radius:999px;
   font-family:var(--font-sans); font-weight:600;
   transition: all .2s ease; text-decoration:none;
 }
-.btn-outline{ background:#fff; color:var(--black); border:2px solid var(--black) }
-.btn-outline:hover{ background:var(--red); color:#fff; border-color:var(--red) }
+.btn-outline{ background:var(--bg); color:var(--text); border:2px solid var(--borders) }
+.btn-outline:hover{ background:var(--accent); color:#fff; border-color:var(--accent) }
 .btn-filled{ background:var(--pink); color:#fff; border:2px solid var(--pink) }
-.btn-filled:hover{ background:var(--red); border-color:var(--red) }
+.btn-filled:hover{ background:var(--accent); border-color:var(--accent) }
 
-/* =========================================
-   Link Buttons
-   ========================================= */
+/* Link Buttons (big CTA) */
 .link-btn{
   display:inline-flex; align-items:center; gap:.4em;
   padding:6px 12px; border-radius:999px;
@@ -400,9 +350,9 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
 .link-btn > svg{ width:1em; height:1em; flex:0 0 auto }
 @media (prefers-contrast: more){ .link-btn{ color:#fff } }
 
-/* =========================================
-   Video embeds 
-   ========================================= */
+/* =======================
+   Video embeds
+   ======================= */
 .video-embed{
   position: relative;
   width: 100%;
@@ -422,9 +372,9 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block;
 }
 
-/* =========================================
-   Footer (dark)
-   ========================================= */
+/* =======================
+   Footer
+   ======================= */
 .footer{
   border-top:4px solid var(--red);
   background:var(--black);
@@ -441,12 +391,10 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   text-underline-offset:2px;
 }
 
-/* =========================================
-   Safety: hide any leftover old layout hooks
-   ========================================= */
+/* =======================
+   Utilities / safety
+   ======================= */
 #left, #right{ display:none !important }
-
-/* ===== Vertical / portrait fail-safe: force single-column stacks ===== */
 @media (orientation: portrait), (max-aspect-ratio: 1/1), (max-width: 800px) {
   .grid, .grid[data-cols]{
     grid-template-columns: 1fr !important;
@@ -456,17 +404,17 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   :root{ --card-gap: 16px; }
 }
 
-/* ===== Modal (full-viewport) ========================================== */
+/* =======================
+   Modal
+   ======================= */
 .jm-modal{
   position: fixed; inset: 0; z-index: 2000;
   opacity: 0; pointer-events: none;
   transition: opacity 160ms ease;
 }
 .jm-modal.is-open{ opacity: 1; pointer-events: auto; }
-
 .jm-modal__backdrop{ opacity: 0; transition: opacity 160ms ease; }
 .jm-modal.is-open .jm-modal__backdrop{ opacity: 1; }
-
 .jm-modal__frame{
   opacity: 0; transition: opacity 160ms ease;
   position: absolute; inset: 0;
@@ -478,40 +426,31 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   box-shadow: 0 10px 40px rgba(0,0,0,.25);
 }
 .jm-modal.is-open .jm-modal__frame{ opacity: 1; }
-
 .jm-modal__close{
   appearance: none; border: 0; background: transparent; cursor: pointer;
   font-size: 22px; line-height: 1;
   margin-left: auto; padding: 14px;
 }
 .jm-modal__close:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
-
 .jm-modal__content{
   overflow: auto; height: 100%;
   border: none; border-radius: 0;
   background: var(--bg); box-shadow: none;
   padding: clamp(8px, 1.5vw, 20px); 
 }
-
-/* When showing an image */
 .jm-modal__content--image{ display: grid; place-items: center; padding: 0; }
 .jm-modal__content--image img{
   max-width: 100%; max-height: 100%; width: auto; height: auto;
   object-fit: contain; opacity: 0; transition: opacity 150ms ease;
 }
 .jm-modal__content--image img[src]{ opacity: 1; }
-
-/* When showing a post: constrain text width */
 .jm-modal__content--post{ max-width: 900px; margin: 0 auto; }
-
 @media (prefers-reduced-motion: reduce){
   .jm-modal, .jm-modal__backdrop, .jm-modal__frame, .jm-modal__content--image img{
     transition: none !important;
   }
 }
 body.jm-no-scroll{ overflow: hidden; }
-
-/* Modal gallery nav */
 .jm-modal__nav{
   position: absolute; top: 50%; transform: translateY(-50%);
   width: var(--nav-size); height: var(--nav-size);
@@ -527,3 +466,81 @@ body.jm-no-scroll{ overflow: hidden; }
   padding-left: calc(var(--nav-size) + var(--nav-gap));
   padding-right: calc(var(--nav-size) + var(--nav-gap));
 }
+
+/* =======================
+   Dark mode (auto)
+   ======================= */
+@media (prefers-color-scheme: dark){
+  :root{
+    /* softer contrast for astigmatism comfort + brighter accent */
+    --bg:#161616;
+    --text:#D4D4D4;
+    --link:#D4D4D4;
+    --thumbBg:#202020;
+    --borders:#2A2A2A;
+    --smallBorders:#5E5E5E;
+    --accent:#de4c45;
+  }
+  .navbar{
+    background: rgba(22,22,22,.92);
+    border-color: var(--borders);
+  }
+  .navbar .navlinks a{ color: var(--text); }
+  .box-caption-text{ background: rgba(0,0,0,.6); color:#fff; }
+  .footer{ background:#0E0E0E; color:#CFCFCF; }
+  .footer a{ color:#CFCFCF; }
+  .jm-modal__frame, .jm-modal__content{ background: var(--bg); color: var(--text); }
+  /* visited links stay vivid in dark */
+  .post-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):visited,
+  .page-body a:not(.btn):not(.link-btn):not(.pill):not([class*="btn"]):not([class*="pill"]):not([role="button"]):not(.box-caption):visited{
+    color: color-mix(in srgb, var(--accent) 85%, white);
+  }
+}
+
+/* =======================
+   Dark mode (manual toggle overrides)
+   ======================= */
+:root[data-theme="light"]{
+  --bg:#FFFFFF; --text:#1E1E1C; --link:#1E1E1C; --thumbBg:#EBEBEB;
+  --hoverLink:#FFFFFF; --borders:#1E1E1C; --smallBorders:#888C8C;
+  /* keep navbar/footer consistent */
+  .navbar{ background: rgba(255,255,255,.9); }
+  .footer{ background: var(--black); color: var(--lg); }
+}
+:root[data-theme="dark"]{
+  --bg:#161616;
+  --text:#D4D4D4;
+  --link:#D4D4D4;
+  --thumbBg:#202020;
+  --borders:#2A2A2A;
+  --smallBorders:#5E5E5E;
+  --accent:#de4c45;
+  .navbar{ background: rgba(22,22,22,.92); }
+  /* CTA label stays white on red in dark */
+  .link-btn{ color:#fff; border-color: var(--accent); }
+  .link-btn:hover{ background: var(--black); border-color: var(--black); }
+}
+
+/* =======================
+   Theme toggle button
+   ======================= */
+.navbar, header, .site-header { position: relative; }
+.theme-toggle{
+  position: absolute;
+  top: clamp(8px, 1.5vw, 14px);
+  right: clamp(8px, 2vw, 20px);
+  padding: 6px 12px;
+  line-height: 1;
+  border: 1px solid var(--borders);
+  background: transparent;
+  color: var(--text);
+  border-radius: 999px;
+  cursor: pointer;
+  z-index: 2;
+}
+.theme-toggle:hover{ transform: translateY(-1px); }
+.theme-toggle:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+:root[data-theme="dark"] .theme-toggle{ border-color: var(--smallBorders); }

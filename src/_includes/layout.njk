@@ -13,10 +13,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 
-  <!-- Site CSS -->
-  <link rel="stylesheet" href="{{ '/assets/css/site.css' | url }}">
+  <!-- No-flash: set default theme (LIGHT) before CSS loads -->
+  <script>
+  (() => {
+    const KEY = 'jm-theme';
+    let t = localStorage.getItem(KEY);
+    if (t !== 'light' && t !== 'dark') {
+      t = 'light';                 // default to LIGHT
+      localStorage.setItem(KEY, t);
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+  </script>
+  <meta name="color-scheme" content="light dark">
 
-  <!-- Theme values from site.json -->
+  <!-- Theme values from site.json (must come BEFORE site.css so site.css can override) -->
   <style>
     :root{
       /* palette */
@@ -26,7 +37,7 @@
       --lg:   #EBEBEB;
       --mg:   #888C8C;
 
-      /* map to your existing site.json-driven vars */
+      /* site.json-driven vars */
       --accent: {{ site.colors.accent }};
       --text:   {{ site.colors.text }};
       --link:   {{ site.colors.link }};
@@ -39,9 +50,12 @@
       /* fonts */
       --font-sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       --font-serif:"Playfair Display", Georgia, serif;
-      --font: var(--font-sans); /* body default */
+      --font: var(--font-sans);
     }
   </style>
+
+  <!-- Site CSS LAST so dark/light token overrides in site.css win -->
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | url }}">
 </head>
 
 <body>
@@ -65,6 +79,14 @@
         {% endfor %}
       </nav>
     </div>
+
+    <!-- Top-right theme toggle -->
+    <button
+      id="theme-toggle"
+      class="pill theme-toggle"
+      type="button"
+      aria-label="Toggle theme"
+      title="Toggle theme">Dark</button>
   </header>
 
   <!-- Centered page content -->
@@ -78,20 +100,19 @@
     </div>
   </footer>
 
+  <!-- Scroll effect -->
   <script>
     (function(){
-      var last = -1;
       function onScroll(){
         var s = window.scrollY || window.pageYOffset || 0;
-        if ((s>10) !== document.body.classList.contains('scrolled')){
-          document.body.classList.toggle('scrolled', s>10);
-        }
+        document.body.classList.toggle('scrolled', s>10);
       }
       window.addEventListener('scroll', onScroll, {passive:true});
       onScroll();
     })();
   </script>
 
+  <!-- Modal structure -->
   <div id="jm-modal" class="jm-modal" aria-hidden="true">
     <div class="jm-modal__backdrop" data-close="true"></div>
     <div class="jm-modal__frame" role="dialog" aria-modal="true" aria-label="Preview">
@@ -102,6 +123,7 @@
     </div>
   </div>
 
+  <!-- Modal logic -->
   <script>
     (() => {
       const modalRoot   = document.getElementById('jm-modal');
@@ -112,12 +134,9 @@
       const imgClass    = 'is-image';
       const noScroll    = 'jm-no-scroll';
 
-      // --- gallery state ---
-      let gallery = { items: [], index: -1 }; // items: [{href, alt}], index of current
-
+      let gallery = { items: [], index: -1 };
       const resetGallery = () => { gallery = { items: [], index: -1 }; };
 
-      // --- close/open ---
       const closeModal = () => {
         modalRoot.classList.remove(openClass, imgClass);
         document.body.classList.remove(noScroll);
@@ -134,7 +153,6 @@
         modalRoot.setAttribute('aria-hidden', 'false');
       };
 
-      // --- loaders ---
       const showImageAt = (idx) => {
         if (!gallery.items.length) return;
         if (idx < 0) idx = gallery.items.length - 1;
@@ -151,7 +169,6 @@
         img.src = href;
         contentWrap.appendChild(img);
 
-        // (optional) preload neighbors
         const pre = new Image(); pre.src = gallery.items[(idx+1)%gallery.items.length].href;
         const pre2 = new Image(); pre2.src = gallery.items[(idx-1+gallery.items.length)%gallery.items.length].href;
       };
@@ -171,7 +188,6 @@
         }
       };
 
-      // --- events: close/backdrop/esc ---
       modalRoot.addEventListener('click', (e) => {
         if (e.target.matches('[data-close], .jm-modal__backdrop')) closeModal();
       });
@@ -184,11 +200,9 @@
         }
       });
 
-      // --- nav buttons ---
       btnPrev.addEventListener('click', () => showImageAt(gallery.index - 1));
       btnNext.addEventListener('click', () => showImageAt(gallery.index + 1));
 
-      // --- touch swipe (basic) ---
       let touchX = null;
       contentWrap.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, {passive:true});
       contentWrap.addEventListener('touchend',   (e) => {
@@ -200,7 +214,6 @@
         touchX = null;
       });
 
-      // --- click delegation: open image/post ---
       document.addEventListener('click', (e) => {
         const a = e.target.closest('a[data-popup]');
         if (!a) return;
@@ -208,38 +221,57 @@
         const type = a.getAttribute('data-popup');   // "post" | "image"
         const href = a.getAttribute('href');
 
-        // Don't hijack modified clicks
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank') return;
 
         if (type === 'post') {
           e.preventDefault();
           openModal(false);
-          resetGallery();                 // gallery not used for post view
+          resetGallery();
           loadPostIntoModal(href);
           return;
-          }
+        }
 
         if (type === 'image') {
           e.preventDefault();
-
           const postBody = a.closest('.post-body') || document;
           const links = Array.from(postBody.querySelectorAll('a[data-popup="image"]'));
-
           gallery.items = links.map(link => ({
             href: link.getAttribute('href'),
             alt: (link.querySelector('img') && link.querySelector('img').alt) || link.getAttribute('data-alt') || ''
           }));
-
           gallery.index = Math.max(0, links.indexOf(a));
-
           openModal(true);
           showImageAt(gallery.index);
         }
       });
     })();
-    </script>
+  </script>
 
+  <!-- Theme toggle logic (DOM-ready, updates label, persists choice) -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const KEY = 'jm-theme';
+    const root = document.documentElement;
+    const btn  = document.getElementById('theme-toggle');
 
+    function effectiveTheme(){
+      const set = root.getAttribute('data-theme');
+      return (set === 'light' || set === 'dark') ? set : 'light';
+    }
+    function setBtnLabel(){
+      if (!btn) return;
+      btn.textContent = effectiveTheme() === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+
+    setBtnLabel();
+
+    btn?.addEventListener('click', () => {
+      const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem(KEY, next);
+      setBtnLabel();
+    });
+  });
+  </script>
 </body>
 </html>
-

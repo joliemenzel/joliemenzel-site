@@ -1,9 +1,12 @@
 ---
 layout: layout.njk
 permalink: "tagged/site_portfolio/index.html"
-title: "Jolie Menzel - Games Portfolio"
+title: "Jolie Menzel - Professional Games Portfolio"
 ---
 
+<h1>Professional Games Portfolio</h1>
+<p>This is a selection of shipped games I’ve worked on in various roles in a professional capacity. Click any title to see my role and contributions.
+</p>
 
 {# Collect portfolio items and build facet list #}
 {% set items  = collections.posts | withTag('site_portfolio') | sortByOrder %}
@@ -17,7 +20,7 @@ title: "Jolie Menzel - Games Portfolio"
   {% endfor %}
 </div>
 
-This is a selection of shipped games I’ve worked on in various roles in a professional capacity. Click any title to see my role and contributions.
+
 
 {# Compact status line #}
 <div class="tag-header">

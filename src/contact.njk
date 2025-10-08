@@ -1,25 +1,15 @@
 ---
 layout: layout.njk
-permalink: "tagged/contact/index.html"
-title: "Contact"
+permalink: "contact/index.html"
+title: "Jolie Menzel - Contact"
 ---
 
 <div class="page-body" id="contact-page">
   <h1>Contact</h1>
   <p>Have a project, opportunity, or question? Send a note below.</p>
+  <p>You can also find me on <a href="https://www.linkedin.com/in/joliemenzel/" target="_blank" rel="noopener noreferrer">LinkedIn</a>.</p>
 
-  <!-- Cloudflare Turnstile auto-render -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
-  <!-- Hidden iframe target for GAS (prevents page navigation) -->
-  <iframe name="gasShim" id="gasShim" style="display:none;" aria-hidden="true"></iframe>
-
-  <form id="contactForm"
-        class="contact-form"
-        action="https://script.google.com/macros/s/AKfycbylBbG38WFk77DUisMS70fEY2v_Unkigp_yu6Dj0gxhTPZbjAY_ndYJ1To17X2HfF0sVQ/exec"
-        method="POST"
-        target="gasShim"
-        novalidate>
+  <form id="contactForm" class="contact-form" action="" method="POST" novalidate>
     <!-- Honeypot -->
     <div style="position:absolute; left:-9999px; opacity:0;">
       <label>Leave this blank
@@ -34,7 +24,7 @@ title: "Contact"
 
     <div class="field">
       <label for="email">Email <span aria-hidden="true">*</span></label>
-      <input id="email" name="email" type="text" required autocomplete="email" inputmode="email">
+      <input id="email" name="email" type="email" required autocomplete="email" inputmode="email">
     </div>
 
     <div class="field">
@@ -42,51 +32,30 @@ title: "Contact"
       <textarea id="message" name="message" rows="6" required></textarea>
     </div>
 
-    <!-- Turnstile widget -->
-    <div id="captchaWrap" class="field">
-      <div class="cf-turnstile"
-           data-sitekey="0x4AAAAAAB5MKNBoSZ0fhmm_"
-           data-callback="cfSolved"
-           data-expired-callback="cfExpired"
-           data-error-callback="cfError"></div>
-      <small id="captchaHint" class="hint">Please verify you’re human to enable “Send”.</small>
-    </div>
+    <!-- JS-only anti-bot signals -->
+    <input type="hidden" name="_start" id="_start">
+    <input type="hidden" name="_elapsed" id="_elapsed">
+    <input type="hidden" name="_jsok" id="_jsok">
 
-    <!-- Status lives BETWEEN captcha and button -->
+    <!-- Status lives between fields and button -->
     <div id="formStatus" class="status" aria-live="polite" hidden></div>
 
-    <!-- Hidden context for GAS -->
-    <input type="hidden" name="page" id="page">
-    <input type="hidden" name="postback_origin" id="postback_origin">
-    <input type="hidden" name="postback_token" id="postback_token">
-
-    <button id="sendBtn" class="btn btn-outline" type="submit" disabled>Send Message</button>
+    <button id="sendBtn" class="btn btn-outline" type="submit">Send Message</button>
   </form>
 </div>
 
 <script>
+  // === CONFIG ===
+  const WORKER_ENDPOINT = 'https://contact-proxy.joliemenzel.workers.dev/';
+  // Optional debug element (guarded so it won't throw if absent)
+  const dbg = document.getElementById('contact-debug');
+  if (dbg) dbg.textContent = '[contact] endpoint: ' + WORKER_ENDPOINT;
+  console.log('[CONTACT] endpoint =', WORKER_ENDPOINT);
+
+  // === ELEMENTS ===
   const form  = document.getElementById('contactForm');
   const btn   = document.getElementById('sendBtn');
-  const hint  = document.getElementById('captchaHint');
   const statusBox = document.getElementById('formStatus');
-
-  // Turnstile enable/disable UX
-  window.cfSolved  = function(){ btn.disabled = false; hint.textContent = 'Great—captcha verified.'; };
-  window.cfExpired = function(){ btn.disabled = true;  hint.textContent = 'Captcha expired—please re-check the box.'; };
-  window.cfError   = function(){ btn.disabled = true;  hint.textContent = 'Captcha error—please reload the page and try again.'; };
-
-  // Set static context on load
-  document.getElementById('page').value = location.href;
-  document.getElementById('postback_origin').value = location.origin;
-
-  // One-time nonce per submission
-  function setNonce() {
-    const tokEl = document.getElementById('postback_token');
-    const v = (crypto && crypto.randomUUID) ? crypto.randomUUID()
-            : (Date.now() + '-' + Math.random().toString(36).slice(2));
-    tokEl.value = v;
-    return v;
-  }
 
   // Friendly validity messages
   (function () {
@@ -115,56 +84,46 @@ title: "Contact"
     messageEl.addEventListener('input', clearCustom);
   })();
 
-  // Submit handler: POSTs to hidden iframe (no navigation)
-  form.addEventListener('submit', (e) => {
-    if (!form.checkValidity()) { e.preventDefault(); form.reportValidity(); return; }
-    if (btn.disabled) { e.preventDefault(); hint.textContent = 'Please complete the captcha to send your message.'; return; }
+  // JS-only anti-bot: set start timestamp and flag
+  const startAt = Date.now();
+  document.getElementById('_start').value = String(startAt);
+  document.getElementById('_jsok').value = '1';
 
-    // assign nonce for this request
-    setNonce();
+  // Submit via Worker (no redirects)
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    // stamp elapsed time in seconds
+    document.getElementById('_elapsed').value = String(Math.round((Date.now() - startAt)/1000));
 
     statusBox.hidden = false;
     statusBox.textContent = 'Sending…';
     statusBox.className = 'status sending';
     btn.disabled = true;
 
-    // Arm a fallback so we never get stuck visually
-    clearTimeout(window.__contactFallback);
-    window.__contactFallback = setTimeout(() => {
-      if (statusBox.classList.contains('sending')) {
-        statusBox.textContent = 'Thanks! If you don’t hear back, feel free to email me directly.';
+    try {
+      const fd = new FormData(form);
+      fd.set('page', location.href); // attach page for your email/logs
+
+      const res = await fetch(WORKER_ENDPOINT, { method:'POST', body:fd, mode:'cors', credentials:'omit' });
+      const data = await res.json().catch(() => ({}));
+      console.log('Worker response:', res.status, data);
+
+      if (res.ok && data && data.ok) {
+        form.reset();
+        statusBox.textContent = 'Thanks! Your message has been sent.';
         statusBox.className = 'status ok';
-        // keep button disabled until captcha is solved again
+      } else {
+        const reason = (data && data.errors && data.errors[0]) || 'Submission failed. Please try again.';
+        statusBox.textContent = reason;
+        statusBox.className = 'status err';
+        btn.disabled = false;
       }
-    }, 5000);
-  });
-
-  // Listen for GAS iframe postMessage using nonce verification
-  window.addEventListener('message', (event) => {
-    // Accept messages only from Google Apps Script wrapper domains
-    const o = String(event.origin || '');
-    const isGoogle = /(^https:\/\/script\.google\.com$)|(\.googleusercontent\.com$)|(\.google\.com$)/.test(o);
-    if (!isGoogle) return;
-
-    const data = event.data || {};
-    if (typeof data.ok !== 'boolean') return;
-
-    // verify the one-time token
-    const expected = document.getElementById('postback_token').value;
-    if (!expected || data.token !== expected) return;
-
-    clearTimeout(window.__contactFallback);
-
-    if (data.ok) {
-      form.reset();
-      if (window.turnstile) { try { turnstile.reset(); } catch(_){} }
-      hint.textContent = 'Please verify you’re human to enable “Send”.';
-      statusBox.textContent = 'Thanks! Your message has been sent.';
-      statusBox.className = 'status ok';
-      btn.disabled = true; // require re-solve
-    } else {
-      const reason = (Array.isArray(data.errors) && data.errors[0]) || 'Submission failed. Please try again.';
-      statusBox.textContent = reason;
+    } catch (err) {
+      console.error('Network error:', err);
+      statusBox.textContent = 'Network error. Please try again.';
       statusBox.className = 'status err';
       btn.disabled = false;
     }
@@ -172,21 +131,62 @@ title: "Contact"
 </script>
 
 <style>
-.contact-form{ max-width: 720px; }
-.field{ margin: 12px 0; display: grid; gap: 6px; }
-.field input, .field textarea{
-  width: 100%; padding: 10px 12px; font: inherit; background: #fff;
-  border: 1px solid var(--smallBorders); border-radius: 6px;
+/* Contact page — theme-aware field styling */
+#contact-page .contact-form{ max-width: 720px; }
+#contact-page .field{ margin: 12px 0; display: grid; gap: 6px; }
+
+/* Inputs/Textareas */
+#contact-page .field input,
+#contact-page .field textarea{
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit;
+  background: var(--bg);              /* theme token */
+  color: var(--text);
+  border: 1px solid var(--borders);
+  border-radius: 8px;                 /* softer corners */
+  transition: border-color .15s ease, background-color .15s ease;
 }
-#captchaWrap{ margin-top: 12px; }
+
+/* Slight lift in dark for readability */
+:root[data-theme="dark"] #contact-page .field input,
+:root[data-theme="dark"] #contact-page .field textarea{
+  background: #1e1e1e;               /* just above --bg (#161616) */
+  border-color: #3a3a3a;
+}
+
+/* Placeholder */
+#contact-page ::placeholder{
+  color: color-mix(in srgb, var(--text) 60%, transparent);
+}
+
+/* Focus ring */
+#contact-page .field input:focus,
+#contact-page .field textarea:focus{
+  outline: none;
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pink) 25%, transparent);
+}
+
+/* Status box (theme-aware backgrounds) */
+#contact-page .status{
+  margin: 12px 0 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+#contact-page .status.sending{ background: color-mix(in srgb, var(--text) 8%, transparent); }
+#contact-page .status.ok     { background: color-mix(in srgb, #00a000 18%, transparent); }
+#contact-page .status.err    { background: color-mix(in srgb, #c00000 18%, transparent); }
+
+/* Button disabled state */
 #sendBtn[disabled]{ opacity: .6; cursor: not-allowed; }
 
-.status{
-  margin: 12px 0 16px;
-  padding: 10px 12px; border-radius: 6px; background: rgba(0,0,0,.04);
+/* Labels */
+#contact-page label{ font-weight: 600; }
+
+/* Required star slightly softer in dark */
+:root[data-theme="dark"] #contact-page label span[aria-hidden="true"]{
+  color: color-mix(in srgb, var(--text) 75%, transparent);
 }
-.status.sending{ background: rgba(0,0,0,.06); }
-.status.ok{ background: rgba(0,150,0,.10); }
-.status.err{ background: rgba(200,0,0,.10); }
-.hint{ display: block; font-size: .9em; color: var(--smallMuted, #666); margin-top: 6px; }
 </style>
