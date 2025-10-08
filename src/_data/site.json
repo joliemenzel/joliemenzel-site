@@ -7,7 +7,7 @@
     {"href": "/", "label": "About"},
     {"href": "/tagged/site_portfolio/", "label": "Games Portfolio"},
     {"href": "/tagged/knowledge/", "label": "Knowledge Sharing"},
-    {"href": "/tagged/contact/", "label": "Contact"}
+    {"href": "/contact/", "label": "Contact"}
   ],
 
   "customTagPages": ["site_portfolio","personal"],

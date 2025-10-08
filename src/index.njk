@@ -18,10 +18,6 @@ title: "About"
   </div>
 </div>
 
-<p>
-      <a class="link-btn" href="{{ '/tagged/site_portfolio/' | url }}">View Resume</a>
-    </p>
-
 <h2 class="section-title">Selected Work</h2>
 <div class="grid" data-cols="3">
   {% for post in collections.posts | withTag('featured') | sortByOrder %}

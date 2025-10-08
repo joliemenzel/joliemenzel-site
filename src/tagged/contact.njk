@@ -1,31 +1,21 @@
 ---
 layout: layout.njk
-permalink: "tagged/contact/index.html"
+permalink: "contact/index.html"
 title: "Contact"
 ---
 
 <div class="page-body" id="contact-page">
   <h1>Contact</h1>
   <p>Have a project, opportunity, or question? Send a note below.</p>
+  <p>You can also find me on <a href="https://www.linkedin.com/in/joliemenzel/" target="_blank" rel="noopener noreferrer">LinkedIn</a>.</p>
 
-  <!-- Cloudflare Turnstile -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
-  <form id="contactForm"
-        class="contact-form"
-        action="https://script.google.com/macros/s/AKfycbw4-pbRUhWQgo2e452YCAu7lGICI7DEv2kpqMPTtDFmyFZ_IRjUPKHnzKDTCTKxyTPKVQ/exec"
-        method="POST">
-
-    {# Honeypot: invisible to humans, catches basic bots #}
+  <form id="contactForm" class="contact-form" action="" method="POST" novalidate>
+    <!-- Honeypot -->
     <div style="position:absolute; left:-9999px; opacity:0;">
       <label>Leave this blank
         <input type="text" name="_gotcha" autocomplete="off" tabindex="-1">
       </label>
     </div>
-
-    {# Optional: redirect back to your site after success
-       <input type="hidden" name="redirect" value="https://beta.joliemenzel.com/contact/thanks/">
-    #}
 
     <div class="field">
       <label for="name">Name <span aria-hidden="true">*</span></label>
@@ -34,7 +24,7 @@ title: "Contact"
 
     <div class="field">
       <label for="email">Email <span aria-hidden="true">*</span></label>
-      <input id="email" name="email" type="email" required autocomplete="email">
+      <input id="email" name="email" type="text" required autocomplete="email" inputmode="email">
     </div>
 
     <div class="field">
@@ -42,53 +32,100 @@ title: "Contact"
       <textarea id="message" name="message" rows="6" required></textarea>
     </div>
 
-    <!-- Turnstile widget + hidden token field -->
-    <div id="captchaWrap">
-      <input type="hidden" id="cfToken" name="cf-turnstile-response" value="">
-      <div class="cf-turnstile"
-           data-sitekey="0x4AAAAAAB5MKNBoSZ0fhmm_"
-           data-callback="cfSolved"
-           data-expired-callback="cfExpired"
-           data-error-callback="cfError"></div>
-      <small id="captchaHint" class="hint">Please verify you’re human to enable “Send”.</small>
-    </div>
+    <!-- JS-only anti-bot signals -->
+    <input type="hidden" name="_start" id="_start">
+    <input type="hidden" name="_elapsed" id="_elapsed">
+    <input type="hidden" name="_jsok" id="_jsok">
 
-    <button id="sendBtn" class="btn btn-outline" type="submit" disabled>Send</button>
+    <!-- Status lives BETWEEN (removed captcha) and button -->
+    <div id="formStatus" class="status" aria-live="polite" hidden></div>
+
+    <button id="sendBtn" class="btn btn-outline" type="submit">Send Message</button>
   </form>
 </div>
 
 <script>
-  // Turnstile gating: keep Send disabled until the captcha returns a token
-  const btn  = document.getElementById('sendBtn');
-  const hint = document.getElementById('captchaHint');
-  const form = document.getElementById('contactForm');
-  const tok  = document.getElementById('cfToken');
+  // === CONFIG ===
+   const WORKER_ENDPOINT = 'https://contact-proxy.joliemenzel.workers.dev/';
+  document.getElementById('contact-debug').textContent =
+    '[contact] endpoint: ' + WORKER_ENDPOINT;
+  console.log('[CONTACT] endpoint =', WORKER_ENDPOINT);
 
-  // Called by Turnstile when solved (token passed as arg)
-  window.cfSolved = function(token){
-    tok.value = token;
-    btn.disabled = false;
-    hint.textContent = 'Great—captcha verified.';
-  };
 
-  // Expired/error: clear token and disable again
-  window.cfExpired = function(){
-    tok.value = '';
+  // === ELEMENTS ===
+  const form  = document.getElementById('contactForm');
+  const btn   = document.getElementById('sendBtn');
+  const statusBox = document.getElementById('formStatus');
+
+  // Friendly validity messages
+  (function () {
+    const nameEl = document.getElementById('name');
+    const emailEl = document.getElementById('email');
+    const messageEl = document.getElementById('message');
+    function clearCustom(e){ e.target.setCustomValidity(''); }
+
+    nameEl.addEventListener('invalid', () => {
+      if (nameEl.validity.valueMissing) nameEl.setCustomValidity('Please add your name.');
+    });
+    nameEl.addEventListener('input', clearCustom);
+
+    emailEl.addEventListener('invalid', () => {
+      if (emailEl.validity.valueMissing) {
+        emailEl.setCustomValidity('Please add your email.');
+      } else if (!/.+@.+\..+/.test(emailEl.value)) {
+        emailEl.setCustomValidity('Please include an “@” and a dot in your email.');
+      }
+    });
+    emailEl.addEventListener('input', clearCustom);
+
+    messageEl.addEventListener('invalid', () => {
+      if (messageEl.validity.valueMissing) messageEl.setCustomValidity('Please add a short message.');
+    });
+    messageEl.addEventListener('input', clearCustom);
+  })();
+
+  // JS-only anti-bot: set start timestamp and flag
+  const startAt = Date.now();
+  document.getElementById('_start').value = String(startAt);
+  document.getElementById('_jsok').value = '1';
+
+  // Submit via Worker (no redirects)
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    // stamp elapsed time in seconds
+    document.getElementById('_elapsed').value = String(Math.round((Date.now() - startAt)/1000));
+
+    statusBox.hidden = false;
+    statusBox.textContent = 'Sending…';
+    statusBox.className = 'status sending';
     btn.disabled = true;
-    hint.textContent = 'Captcha expired—please re-check the box.';
-  };
-  window.cfError = function(){
-    tok.value = '';
-    btn.disabled = true;
-    hint.textContent = 'Captcha error—please reload the page and try again.';
-  };
 
-  // Guard submit if somehow no token is present
-  form.addEventListener('submit', function(e){
-    if (!tok.value) {
-      e.preventDefault();
-      btn.disabled = true;
-      hint.textContent = 'Please complete the captcha before sending.';
+    try {
+      const fd = new FormData(form);
+      fd.set('page', location.href); // attach page for your email/logs
+
+      const res = await fetch(WORKER_ENDPOINT, { method:'POST', body:fd, mode:'cors', credentials:'omit' });
+      const data = await res.json().catch(() => ({}));
+      console.log('Worker response:', res.status, data);
+
+      if (res.ok && data && data.ok) {
+        form.reset();
+        statusBox.textContent = 'Thanks! Your message has been sent.';
+        statusBox.className = 'status ok';
+      } else {
+        const reason = (data && data.errors && data.errors[0]) || 'Submission failed. Please try again.';
+        statusBox.textContent = reason;
+        statusBox.className = 'status err';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      console.error('Network error:', err);
+      statusBox.textContent = 'Network error. Please try again.';
+      statusBox.className = 'status err';
+      btn.disabled = false;
     }
   });
 </script>
@@ -101,6 +138,12 @@ title: "Contact"
   border: 1px solid var(--smallBorders); border-radius: 6px;
 }
 #sendBtn[disabled]{ opacity: .6; cursor: not-allowed; }
-#captchaWrap{ margin: 12px 0; }
-.hint{ display: block; font-size: .9em; color: var(--smallMuted, #666); margin-top: 6px; }
+
+.status{
+  margin: 12px 0 16px;
+  padding: 10px 12px; border-radius: 6px; background: rgba(0,0,0,.04);
+}
+.status.sending{ background: rgba(0,0,0,.06); }
+.status.ok{ background: rgba(0,150,0,.10); }
+.status.err{ background: rgba(200,0,0,.10); }
 </style>
