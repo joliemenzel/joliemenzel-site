@@ -346,7 +346,16 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
 /* =======================
    Filter pills
    ======================= */
-.filter{ display:flex; align-items:center; gap:8px; margin:8px 0 16px; font-family:var(--font-sans) }
+.filter{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin:8px 0 16px;
+  max-width: 100%;
+  font-family:var(--font-sans);
+}
 .filter .pill{
   appearance:none; -webkit-appearance:none;
   border:1px solid var(--borders);
@@ -355,6 +364,7 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   padding:4px 10px; border-radius:999px;
   font-size:12px; letter-spacing:.06em; text-transform:uppercase;
   cursor:pointer;
+  white-space: nowrap;   
 }
 .filter .pill:hover{
   background: var(--accent);
@@ -367,6 +377,13 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   border-color: var(--accent);
 }
 .filter .pill:focus-visible{ outline:2px solid var(--pink); outline-offset:2px }
+
+/* Optional (safety) — if you ever have *tons* of tags,
+   let it scroll instead of pushing the layout */
+@media (max-width: 760px){
+  .filter{ overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
 
 /* =======================
    Misc content
