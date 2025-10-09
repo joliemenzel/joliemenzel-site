@@ -59,9 +59,8 @@
 </head>
 
 <body>
-  <!-- Full-bleed sticky ribbon -->
   <header class="navbar">
-    <!-- Left-pinned logo -->
+    {# Left-pinned logo #}
     {% if site.header.image %}
       <a class="brand brand--logo" href="{{ '/' | url }}">
         <img class="brand-image" src="{{ site.header.image }}" alt="{{ site.title }}">
@@ -70,23 +69,23 @@
       <a class="brand brand--logo" href="{{ '/' | url }}">JM</a>
     {% endif %}
 
-    <!-- Centered title + links -->
     <div class="inner">
-      <div class="brand brand--text">{{ site.title }}</div>
+      <div class="brand-row">
+        <div class="brand brand--text">{{ site.title }}</div>
+        <button
+          id="theme-toggle"
+          class="pill theme-toggle"
+          type="button"
+          aria-label="Toggle theme"
+          title="Toggle theme">Dark</button>
+      </div>
+
       <nav class="navlinks">
         {% for item in site.nav %}
           <a href="{{ item.href | url }}">{{ item.label }}</a>
         {% endfor %}
       </nav>
     </div>
-
-    <!-- Top-right theme toggle -->
-    <button
-      id="theme-toggle"
-      class="pill theme-toggle"
-      type="button"
-      aria-label="Toggle theme"
-      title="Toggle theme">Dark</button>
   </header>
 
   <!-- Centered page content -->
@@ -260,7 +259,7 @@
     }
     function setBtnLabel(){
       if (!btn) return;
-      btn.textContent = effectiveTheme() === 'dark' ? 'Light Mode' : 'Dark Mode';
+      btn.textContent = effectiveTheme() === 'dark' ? 'Light' : 'Dark';
     }
 
     setBtnLabel();

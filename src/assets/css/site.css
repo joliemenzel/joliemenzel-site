@@ -125,6 +125,68 @@ a.is-accent { color: var(--accent); }
   text-decoration:none;
 }
 
+.brand-row{
+  display:flex; align-items:center; gap:10px;
+}
+
+/* Mobile layout: logo | (title + toggle) on first row; nav buttons stacked below */
+/* Mobile: give the top row breathing room so the toggle never overlaps */
+@media (max-width: 800px){
+  .navbar{
+    display: grid;
+    grid-template-columns: auto 1fr auto;     /* logo | title | toggle */
+    grid-template-rows: minmax(64px, auto) auto; /* taller top row */
+    column-gap: 12px;
+    row-gap: 14px;                            /* <-- space between rows */
+    align-items: center;
+    padding: 10px 12px;
+  }
+
+  /* Let children place directly on the navbar grid */
+  .navbar .inner{ display: contents; }
+
+  /* Left: logo */
+  .navbar .brand--logo{
+    grid-column: 1; grid-row: 1;
+    align-self: center; justify-self: start;
+  }
+  .navbar .brand--logo .brand-image{
+    display:block; height: 36px; width:auto; /* a bit bigger per your note */
+  }
+
+  /* Center: title (bigger, centered) */
+  .brand-row{
+    grid-column: 2; grid-row: 1;
+    display:grid; place-items:center;
+    min-height: 48px;                         /* extra headroom for title */
+    padding: 4px 0;
+  }
+  .brand-row .brand--text{
+    font-size: 1.15rem; font-weight: 700;     /* bump size */
+    line-height: 1.2; text-align: center; margin: 0;
+  }
+
+  /* Right: Dark Mode toggle (fixed height) */
+  #theme-toggle.theme-toggle{
+    grid-column: 3; grid-row: 1;
+    justify-self: end; align-self: center;
+    height: 38px; line-height: 38px;          /* consistent control height */
+    padding: 0 14px; margin: 0;
+  }
+
+  /* Second row: full-width stacked nav with comfy top margin */
+  .navlinks{
+    grid-column: 1 / span 3; grid-row: 2;
+    display:flex; flex-direction:column; gap:10px;
+    margin-top: 2px;                           /* tiny extra if you want */
+  }
+  .navbar .navlinks a{
+    display:block; text-align:center;
+    padding:12px 14px;
+  }
+}
+
+
 /* =======================
    Grid / boxes
    ======================= */
@@ -215,18 +277,29 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   max-width:1100px; margin:0 auto; padding:0 24px;
   display:grid; gap:24px; grid-template-columns:1fr 1.2fr;
 }
-@media (max-width:900px){ .about .wrap{ grid-template-columns:1fr } }
+@media (max-width:800px){ .about .wrap{ grid-template-columns:1fr } }
 .about .photo{ border:2px solid var(--red); border-radius:6px; overflow:hidden }
 .about .bio{ font-family:var(--font-sans) }
 .about .pull{ font-family:var(--font-serif); color:var(--pink) }
-
+/* ===== HERO (About) ===== */
 .about-hero{
   display: grid;
-  grid-template-columns: minmax(160px, 280px) 1fr; 
+  grid-template-columns: minmax(160px, 280px) 1fr; /* desktop: media left, text right */
   gap: 18px;
   align-items: start;
   margin: 12px 0 28px;
+  grid-template-areas: "media text";
 }
+
+/* Map children to grid areas */
+.about-hero__media{ grid-area: media; }
+.about-hero__text { 
+  grid-area: text; 
+  display: grid; 
+  gap: .5rem; 
+}
+
+/* Photo frame + image */
 .about-hero__photoFrame{
   aspect-ratio: 3 / 4;
   width: 100%;
@@ -245,12 +318,30 @@ a[data-popup]:hover{ text-decoration-thickness: 3px }
   transform: scale(var(--zoom, 1));
   transform-origin: var(--focus, 50% 50%);
 }
-@media (max-width: 800px), (orientation: portrait){
-  .about-hero{ grid-template-columns: 1fr; }
-  .about-hero__text{ order: 1; }
-  .about-hero__photoFrame{ order: 2; max-width: 320px; }
+
+/* Keep photo + resume button as one grid child */
+.about-hero__media{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
-.about-hero__text{ display: grid; gap: .5rem; }
+
+/* Spacing for the button under the photo */
+.about-hero__actions{ margin-top: 4px; }
+
+/* ===== Mobile: stack TEXT first, then MEDIA (photo + button) ===== */
+@media (max-width: 800px), (orientation: portrait){
+  .about-hero{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "text"
+      "media";
+    gap: 18px;
+  }
+  .about-hero__photoFrame{ max-width: 320px; } /* keep photo nicely sized on mobile */
+}
+
 
 /* =======================
    Filter pills
@@ -497,6 +588,7 @@ body.jm-no-scroll{ overflow: hidden; }
   }
 }
 
+
 /* =======================
    Dark mode (manual toggle overrides)
    ======================= */
@@ -530,17 +622,52 @@ body.jm-no-scroll{ overflow: hidden; }
   top: clamp(8px, 1.5vw, 14px);
   right: clamp(8px, 2vw, 20px);
   padding: 6px 12px;
-  line-height: 1;
   border: 1px solid var(--borders);
   background: transparent;
   color: var(--text);
   border-radius: 999px;
   cursor: pointer;
   z-index: 2;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  line-height: 1;
 }
+
+
 .theme-toggle:hover{ transform: translateY(-1px); }
 .theme-toggle:focus-visible{
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 :root[data-theme="dark"] .theme-toggle{ border-color: var(--smallBorders); }
+
+/* Invert the toggle’s look: dark pill in LIGHT, light pill in DARK */
+:root[data-theme="light"] .theme-toggle{
+  background: var(--black);
+  color: #fff;
+  border-color: var(--black);
+  box-shadow: 0 1px 0 rgba(0,0,0,.08);
+}
+:root[data-theme="light"] .theme-toggle:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+:root[data-theme="dark"] .theme-toggle{
+  background: var(--lg);            /* your light gray token */
+  color: var(--black);
+  border-color: var(--smallBorders);
+  box-shadow: 0 1px 0 rgba(255,255,255,.06);
+}
+:root[data-theme="dark"] .theme-toggle:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+}
+
+/* Optional: subtle active press feedback */
+.theme-toggle:active{ transform: translateY(0); }
+
+/* Smooth it out */
+.theme-toggle{ transition: background .15s ease, color .15s ease, transform .15s ease, filter .15s ease; }
